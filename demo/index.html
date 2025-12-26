@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prysm MVP | Save the Semester</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --lavender: #E0D7FF;
+            --lime: #D4FF80;
+            --dark: #1A1A1B;
+        }
+        body {
+            background-color: #F8F9FD;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(224, 215, 255, 0.5);
+            border-radius: 20px;
+        }
+        .streak-badge {
+            background: linear-gradient(135deg, var(--lime), #b8eb4d);
+            box-shadow: 0 4px 15px rgba(212, 255, 128, 0.4);
+        }
+        .sidebar-item:hover {
+            background-color: var(--lavender);
+            color: #5D3FD3;
+        }
+        .accent-border {
+            border-left: 4px solid var(--lime);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 glass-card m-4 hidden md:flex flex-col p-6 shadow-xl">
+            <div class="text-2xl font-bold mb-10 flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#5D3FD3] rounded-lg rotate-45"></div>
+                <span class="tracking-tight">PRYSM</span>
+            </div>
+            
+            <nav class="space-y-4 flex-grow">
+                <a href="#" class="sidebar-item flex items-center p-3 rounded-xl transition-all text-gray-600">
+                    <i class="fa-solid fa-house mr-3"></i> Dashboard
+                </a>
+                <a href="#" class="sidebar-item flex items-center p-3 rounded-xl transition-all text-gray-600">
+                    <i class="fa-solid fa-book-open mr-3"></i> Exam Hub
+                </a>
+                <a href="#" class="sidebar-item flex items-center p-3 rounded-xl transition-all text-gray-600 accent-border bg-purple-50">
+                    <i class="fa-solid fa-pen-nib mr-3"></i> Smart Notes
+                </a>
+                <a href="#" class="sidebar-item flex items-center p-3 rounded-xl transition-all text-gray-600">
+                    <i class="fa-solid fa-calendar-day mr-3"></i> Timetable
+                </a>
+            </nav>
+
+            <div class="mt-auto p-4 bg-gray-50 rounded-2xl">
+                <p class="text-xs text-gray-400 uppercase font-bold mb-2">Study Streak</p>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🔥</span>
+                    <span class="font-bold text-xl">12 Days</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Welcome back, Student! 👋</h1>
+                    <p class="text-gray-500">You have 2 exams approaching in the next 14 days.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="p-2 bg-white rounded-full shadow-sm"><i class="fa-regular fa-bell"></i></button>
+                    <div class="w-10 h-10 rounded-full bg-purple-200 border-2 border-white shadow-sm"></div>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <div class="lg:col-span-2 glass-card p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold">Exam Hub: Namibia (NSSCO)</h3>
+                        <span class="text-xs font-bold px-3 py-1 bg-purple-100 text-purple-700 rounded-full uppercase">Syllabus Sync Active</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-lime-100 flex items-center justify-center rounded-lg text-lime-700">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-700">Mathematics Paper 2</p>
+                                    <p class="text-xs text-gray-400">2023 October/November Session</p>
+                                </div>
+                            </div>
+                            <button class="text-purple-600 font-bold hover:underline">View Insights</button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-blue-100 flex items-center justify-center rounded-lg text-blue-700">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-700">Biology Paper 1</p>
+                                    <p class="text-xs text-gray-400">2022 October/November Session</p>
+                                </div>
+                            </div>
+                            <button class="text-purple-600 font-bold hover:underline">View Insights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 shadow-sm flex flex-col items-center justify-center text-center">
+                    <h3 class="text-xl font-bold mb-4">Course Progress</h3>
+                    <div class="relative w-32 h-32 mb-4">
+                        <svg class="w-full h-full" viewBox="0 0 36 36">
+                            <path class="text-gray-200" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="text-lime-400" stroke-width="3" stroke-dasharray="75, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center font-bold text-2xl text-gray-700">75%</div>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Physics Syllabus Completed</p>
+                    <button class="w-full py-3 streak-badge text-gray-800 font-bold rounded-xl hover:scale-105 transition-transform">Continue Studying</button>
+                </div>
+
+                <div class="lg:col-span-3 glass-card p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold">Recent Study Notes</h3>
+                        <button class="bg-[#5D3FD3] text-white px-4 py-2 rounded-lg text-sm">+ New Note</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                            <p class="font-bold text-purple-900 mb-1">Organic Chemistry</p>
+                            <p class="text-xs text-purple-600">Updated 2h ago</p>
+                        </div>
+                        <div class="p-4 bg-lime-50 rounded-xl border border-lime-100">
+                            <p class="font-bold text-lime-900 mb-1">Business Economics</p>
+                            <p class="text-xs text-lime-600">Updated 5h ago</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="font-bold text-gray-800 mb-1">Geography P2 Skills</p>
+                            <p class="text-xs text-gray-500">Updated yesterday</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="font-bold text-gray-800 mb-1">English Literature</p>
+                            <p class="text-xs text-gray-500">Updated 3 days ago</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple interactive elements
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('bg-purple-50', 'accent-border'));
+                this.classList.add('bg-purple-50', 'accent-border');
+            });
+        });
+    </script>
+</body>
+</html>
