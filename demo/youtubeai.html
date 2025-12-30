@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube AI | Prysm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --prysm-bg: #120d2b;
+        --prysm-card: #1d163d;
+        --lime: #d4ff80;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--prysm-bg);
+        color: white;
+      }
+      .academy-card {
+        background: var(--prysm-card);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.4s ease;
+      }
+      .academy-card:hover {
+        border-color: var(--lime);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(212, 255, 128, 0.1);
+      }
+      .glow-btn {
+        background-color: var(--lime);
+        color: #120d2b;
+        box-shadow: 0 0 20px rgba(212, 255, 128, 0.2);
+        transition: all 0.3s ease;
+      }
+      .glow-btn:hover {
+        box-shadow: 0 0 40px rgba(212, 255, 128, 0.5);
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="sticky top-0 z-50 bg-[#120d2b]/95 backdrop-blur-xl border-b border-white/5 px-6 py-4"
+    >
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="front.html" class="flex items-center gap-3">
+          <img
+            src="logo.png"
+            alt="Prysm Logo"
+            class="h-8 w-8"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-lime-400 to-lime-300 rounded-lg flex items-center justify-center shadow-lg shadow-lime-400/30"
+            style="display: none"
+          >
+            <i class="fa-solid fa-p text-[#120d2b] text-sm font-black"></i>
+          </div>
+          <span
+            class="font-extrabold tracking-tight text-white uppercase text-xl"
+            >Prysm</span
+          >
+        </a>
+        <a
+          href="https://forms.gle/zPrvdcByqTTNuGAx8"
+          target="_blank"
+          class="glow-btn px-6 py-2.5 rounded-lg font-bold text-sm"
+        >
+          Join Waitlist
+        </a>
+      </div>
+    </nav>
+
+    <section class="max-w-7xl mx-auto px-6 py-20">
+      <div class="grid lg:grid-cols-2 gap-16 items-center mb-16">
+        <div class="relative order-2 lg:order-1">
+          <div
+            class="academy-card rounded-3xl p-8 border border-white/10 relative overflow-hidden bg-[#1d163d]"
+          >
+            <div
+              class="absolute -inset-4 bg-orange-400/10 blur-2xl rounded-full"
+            ></div>
+            <div
+              class="relative bg-[#120d2b] rounded-2xl p-6 border border-white/5"
+            >
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div class="w-3 h-3 rounded-full bg-lime-400/80"></div>
+                </div>
+                <div
+                  class="px-3 py-1 bg-orange-400/10 rounded-full border border-orange-400/30"
+                >
+                  <span class="text-[10px] text-orange-400 font-bold uppercase"
+                    >AI Processing</span
+                  >
+                </div>
+              </div>
+              <div class="space-y-4">
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                  <div class="flex items-center gap-3 mb-3">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-orange-400/20 flex items-center justify-center"
+                    >
+                      <i class="fa-brands fa-youtube text-orange-400"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-xs text-gray-400">Biology Tutorial</p>
+                      <p class="text-sm font-bold text-white">
+                        Enzymes Explained
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="h-1.5 bg-white/5 rounded-full overflow-hidden mb-2"
+                  >
+                    <div
+                      class="h-full bg-orange-400/30 rounded-full"
+                      style="width: 75%"
+                    ></div>
+                  </div>
+                  <p class="text-xs text-gray-400">
+                    Processing transcript... 75%
+                  </p>
+                </div>
+                <div
+                  class="bg-orange-400/10 rounded-xl p-4 border border-orange-400/20"
+                >
+                  <p class="text-xs font-bold text-orange-400 uppercase mb-2">
+                    AI Summary Ready
+                  </p>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                      <i class="fa-solid fa-check text-orange-400 text-xs"></i>
+                      <span class="text-xs text-white"
+                        >Transcript Generated</span
+                      >
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="fa-solid fa-check text-orange-400 text-xs"></i>
+                      <span class="text-xs text-white"
+                        >Key Points Extracted</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2 text-center lg:text-left">
+          <span
+            class="px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block bg-orange-400/10 text-orange-400 border border-orange-400/30"
+          >
+            Coming Phase 2
+          </span>
+          <h1 class="text-5xl lg:text-6xl font-extrabold mb-6">
+            YouTube AI Intelligence
+          </h1>
+          <p class="text-xl text-gray-400 mb-10">
+            Transform any YouTube video into study notes instantly. Get
+            transcripts, translations, and AI-powered summaries in seconds.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        <div class="academy-card p-8 rounded-3xl">
+          <div
+            class="w-16 h-16 bg-orange-400/10 rounded-xl flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-file-text text-orange-400 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Instant Transcripts</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Paste any YouTube URL and get a complete transcript in seconds. No
+            more rewinding to catch important points.
+          </p>
+        </div>
+
+        <div class="academy-card p-8 rounded-3xl">
+          <div
+            class="w-16 h-16 bg-orange-400/10 rounded-xl flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-language text-orange-400 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Multi-Language Translation</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Translate transcripts into your preferred language. Perfect for
+            studying content in multiple languages or improving comprehension.
+          </p>
+        </div>
+
+        <div class="academy-card p-8 rounded-3xl">
+          <div
+            class="w-16 h-16 bg-orange-400/10 rounded-xl flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-sparkles text-orange-400 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">AI Summaries</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Get intelligent summaries highlighting key points, concepts, and
+            important information. Save hours of note-taking time.
+          </p>
+        </div>
+
+        <div class="academy-card p-8 rounded-3xl">
+          <div
+            class="w-16 h-16 bg-orange-400/10 rounded-xl flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-download text-orange-400 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Export to Notes</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Seamlessly export transcripts and summaries to your Prysm notes.
+            Link videos to syllabus topics for easy reference.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <a
+          href="front.html"
+          class="inline-flex items-center gap-2 text-orange-400 font-semibold hover:gap-3 transition-all"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          Back to Home
+        </a>
+      </div>
+    </section>
+  </body>
+</html>

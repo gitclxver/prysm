@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Learn about Prysm - The Ultimate Student OS. Discover our mission, vision, and commitment to revolutionizing education for SADC students through AI-powered tools."
+    />
+    <title>About Us | Prysm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --prysm-bg: #120d2b;
+        --prysm-card: #1d163d;
+        --lavender: #e0d7ff;
+        --lime: #d4ff80;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--prysm-bg);
+        background-image: radial-gradient(
+            circle at 20% 50%,
+            rgba(212, 255, 128, 0.03) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(224, 215, 255, 0.03) 0%,
+            transparent 50%
+          );
+        color: white;
+        scroll-behavior: smooth;
+      }
+      .academy-card {
+        background: var(--prysm-card);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .academy-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--lime),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .academy-card:hover {
+        border-color: var(--lime);
+        transform: translateY(-6px);
+        background: linear-gradient(135deg, #251c4a 0%, #1d163d 100%);
+        box-shadow: 0 20px 40px rgba(212, 255, 128, 0.1);
+      }
+      .academy-card:hover::before {
+        opacity: 1;
+      }
+      .glow-btn {
+        background-color: var(--lime);
+        color: #120d2b;
+        box-shadow: 0 0 20px rgba(212, 255, 128, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .glow-btn:hover {
+        box-shadow: 0 0 40px rgba(212, 255, 128, 0.5);
+        transform: scale(1.05);
+      }
+      .text-gradient {
+        background: linear-gradient(
+          135deg,
+          var(--lime) 0%,
+          var(--lavender) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .badge-purple {
+        background: rgba(224, 215, 255, 0.1);
+        color: var(--lavender);
+        border: 1px solid rgba(224, 215, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="sticky top-0 z-50 bg-[#120d2b]/95 backdrop-blur-xl border-b border-white/5 px-6 py-4 shadow-lg shadow-black/20"
+    >
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="front.html" class="flex items-center gap-3 group">
+          <img
+            src="logo.png"
+            alt="Prysm Logo"
+            class="h-8 w-8"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div
+            class="w-8 h-8 bg-gradient-to-br from-lime-400 to-lime-300 rounded-lg flex items-center justify-center shadow-lg shadow-lime-400/30"
+            style="display: none"
+          >
+            <i class="fa-solid fa-p text-[#120d2b] text-sm font-black"></i>
+          </div>
+          <span
+            class="font-extrabold tracking-tight text-white uppercase text-xl group-hover:text-lime-400 transition-colors"
+            >Prysm</span
+          >
+        </a>
+        <div class="hidden lg:flex gap-10 text-sm font-semibold">
+          <a
+            href="front.html#features"
+            class="text-gray-400 hover:text-lime-400 transition-colors"
+            >Features</a
+          >
+          <a
+            href="front.html#exams"
+            class="text-gray-400 hover:text-lime-400 transition-colors"
+            >Exams</a
+          >
+          <a
+            href="front.html#tools"
+            class="text-gray-400 hover:text-lime-400 transition-colors"
+            >Tools</a
+          >
+          <a
+            href="front.html#parents"
+            class="text-gray-400 hover:text-lime-400 transition-colors"
+            >Parents</a
+          >
+          <a href="about.htm" class="text-lime-400 transition-colors">About</a>
+        </div>
+        <div class="flex items-center gap-6">
+          <a
+            href="https://forms.gle/zPrvdcByqTTNuGAx8"
+            target="_blank"
+            class="glow-btn px-6 py-2.5 rounded-lg font-bold text-sm inline-block text-center"
+          >
+            <span>Join Waitlist</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20 lg:py-32">
+      <div class="text-center mb-20">
+        <span
+          class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+        >
+          <i class="fa-solid fa-sparkles mr-2"></i>Our Story
+        </span>
+        <h1 class="text-5xl lg:text-7xl font-extrabold mb-6">
+          Building the Future of <span class="text-gradient">Education</span>
+        </h1>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          We're on a mission to revolutionize how SADC students learn, study,
+          and succeed. Prysm isn't just another app—it's your complete academic
+          operating system.
+        </p>
+      </div>
+    </section>
+
+    <!-- Company Overview -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid lg:grid-cols-2 gap-16 items-center mb-20">
+        <div>
+          <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+            Who <span class="text-gradient">We Are</span>
+          </h2>
+          <div class="space-y-4 text-lg text-gray-300 leading-relaxed">
+            <p>
+              Prysm is an innovative education technology company founded with a
+              singular vision: to centralize and simplify the academic journey
+              for millions of students across the Southern African Development
+              Community (SADC).
+            </p>
+            <p>
+              Born from the frustration of juggling multiple apps, scattered
+              notes, and fragmented study resources, Prysm represents the first
+              truly unified platform designed specifically for African students.
+              We understand the unique challenges students face—from accessing
+              curriculum-specific exam papers to managing complex study
+              schedules across different syllabuses.
+            </p>
+            <p>
+              Our platform harnesses cutting-edge artificial intelligence to
+              provide intelligent insights, automate tedious tasks, and deliver
+              personalized learning experiences that adapt to each student's
+              unique needs and learning style.
+            </p>
+          </div>
+        </div>
+        <div class="academy-card rounded-3xl p-8 border border-white/10">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="text-center p-6 bg-white/5 rounded-xl">
+              <div
+                class="w-16 h-16 rounded-full bg-lime-400/20 flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fa-solid fa-users text-lime-400 text-2xl"></i>
+              </div>
+              <p class="text-3xl font-extrabold text-white mb-2">10,000+</p>
+              <p class="text-sm text-gray-400">Students on Waitlist</p>
+            </div>
+            <div class="text-center p-6 bg-white/5 rounded-xl">
+              <div
+                class="w-16 h-16 rounded-full bg-purple-400/20 flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fa-solid fa-globe text-purple-400 text-2xl"></i>
+              </div>
+              <p class="text-3xl font-extrabold text-white mb-2">8+</p>
+              <p class="text-sm text-gray-400">SADC Countries</p>
+            </div>
+            <div class="text-center p-6 bg-white/5 rounded-xl">
+              <div
+                class="w-16 h-16 rounded-full bg-orange-400/20 flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fa-solid fa-file-alt text-orange-400 text-2xl"></i>
+              </div>
+              <p class="text-3xl font-extrabold text-white mb-2">50,000+</p>
+              <p class="text-sm text-gray-400">Exam Papers</p>
+            </div>
+            <div class="text-center p-6 bg-white/5 rounded-xl">
+              <div
+                class="w-16 h-16 rounded-full bg-blue-400/20 flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fa-solid fa-rocket text-blue-400 text-2xl"></i>
+              </div>
+              <p class="text-3xl font-extrabold text-white mb-2">2026</p>
+              <p class="text-sm text-gray-400">Launch Year</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <div class="academy-card rounded-3xl p-10 border border-white/10">
+          <div
+            class="w-20 h-20 rounded-2xl bg-lime-400/20 flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-bullseye text-lime-400 text-3xl"></i>
+          </div>
+          <h3 class="text-3xl font-extrabold mb-4">Our Mission</h3>
+          <p class="text-lg text-gray-300 leading-relaxed">
+            To empower every SADC student with intelligent, centralized tools
+            that eliminate academic friction, streamline learning workflows, and
+            unlock their full potential. We believe that access to organized,
+            AI-enhanced educational resources should be universal, not a
+            privilege.
+          </p>
+          <p class="text-lg text-gray-300 leading-relaxed mt-4">
+            By integrating exam preparation, note-taking, scheduling, and study
+            analytics into one cohesive platform, we're not just building
+            software—we're building the foundation for academic excellence
+            across the region.
+          </p>
+        </div>
+        <div class="academy-card rounded-3xl p-10 border border-white/10">
+          <div
+            class="w-20 h-20 rounded-2xl bg-purple-400/20 flex items-center justify-center mb-6"
+          >
+            <i class="fa-solid fa-eye text-purple-400 text-3xl"></i>
+          </div>
+          <h3 class="text-3xl font-extrabold mb-4">Our Vision</h3>
+          <p class="text-lg text-gray-300 leading-relaxed">
+            To become the definitive educational operating system for African
+            students, recognized as the platform that transformed how millions
+            of learners prepare for exams, organize their studies, and achieve
+            academic success.
+          </p>
+          <p class="text-lg text-gray-300 leading-relaxed mt-4">
+            We envision a future where every student has instant access to
+            curriculum-aligned resources, AI-powered study recommendations, and
+            collaborative tools that make learning intuitive, efficient, and
+            genuinely enjoyable.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="text-center mb-16">
+        <span
+          class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+        >
+          <i class="fa-solid fa-book-open mr-2"></i>The Journey
+        </span>
+        <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+          How It All <span class="text-gradient">Started</span>
+        </h2>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        <div class="space-y-8">
+          <div class="academy-card rounded-2xl p-8 border border-white/10">
+            <div class="flex items-start gap-6">
+              <div
+                class="w-16 h-16 rounded-xl bg-lime-400/20 flex items-center justify-center flex-shrink-0"
+              >
+                <i class="fa-solid fa-lightbulb text-lime-400 text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-extrabold mb-3">The Problem</h3>
+                <p class="text-gray-300 leading-relaxed">
+                  As students ourselves, we experienced firsthand the chaos of
+                  academic life. Notes scattered across Google Drive, exam
+                  papers buried in WhatsApp groups, study schedules scribbled on
+                  paper, and no single source of truth for curriculum-specific
+                  resources. We spent more time organizing than actually
+                  studying.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="academy-card rounded-2xl p-8 border border-white/10">
+            <div class="flex items-start gap-6">
+              <div
+                class="w-16 h-16 rounded-xl bg-purple-400/20 flex items-center justify-center flex-shrink-0"
+              >
+                <i class="fa-solid fa-code text-purple-400 text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-extrabold mb-3">The Solution</h3>
+                <p class="text-gray-300 leading-relaxed">
+                  We realized that what students needed wasn't another app—it
+                  was a complete ecosystem. A unified platform that combines
+                  AI-powered insights with intuitive design, specifically
+                  tailored to SADC curricula. Thus, Prysm was born: the Ultimate
+                  Student OS that centralizes everything you need to succeed.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="academy-card rounded-2xl p-8 border border-white/10">
+            <div class="flex items-start gap-6">
+              <div
+                class="w-16 h-16 rounded-xl bg-orange-400/20 flex items-center justify-center flex-shrink-0"
+              >
+                <i class="fa-solid fa-rocket text-orange-400 text-2xl"></i>
+              </div>
+              <div>
+                <h3 class="text-2xl font-extrabold mb-3">The Future</h3>
+                <p class="text-gray-300 leading-relaxed">
+                  Launching in February 2026, Prysm will begin its journey to
+                  transform education across Southern Africa. With Phase 1
+                  focusing on core tools and Phase 3 expanding to mobile apps
+                  and parent dashboards, we're building not just for today, but
+                  for the next generation of students.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="text-center mb-16">
+        <span
+          class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+        >
+          <i class="fa-solid fa-heart mr-2"></i>What Drives Us
+        </span>
+        <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+          Our Core <span class="text-gradient">Values</span>
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-lime-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-graduation-cap text-lime-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">Student-First</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Every feature, every decision, every innovation is driven by what
+            students actually need. We build for students, with students.
+          </p>
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-purple-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-globe-africa text-purple-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">Local Focus</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Built specifically for SADC curricula, exam boards, and educational
+            systems. We understand your context because we share it.
+          </p>
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-orange-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-brain text-orange-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">AI-Powered</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Harnessing the latest AI to provide intelligent insights,
+            predictions, and personalized recommendations that make studying
+            smarter, not harder.
+          </p>
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-blue-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-lock text-blue-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">Privacy & Security</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Your data is yours. We implement enterprise-grade security to
+            protect your academic information and respect your privacy.
+          </p>
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-red-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-trophy text-red-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">Excellence</h3>
+          <p class="text-gray-400 leading-relaxed">
+            We're committed to building world-class software that rivals global
+            education platforms while remaining accessible and relevant to
+            African students.
+          </p>
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-green-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-handshake text-green-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-3">Accessibility</h3>
+          <p class="text-gray-400 leading-relaxed">
+            Core features free forever. We believe premium education tools
+            shouldn't come with premium price tags for essential functionality.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- What We're Building -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="text-center mb-16">
+        <span
+          class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+        >
+          <i class="fa-solid fa-cogs mr-2"></i>Our Platform
+        </span>
+        <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+          What We're <span class="text-gradient">Building</span>
+        </h2>
+        <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+          A comprehensive suite of tools designed to centralize your entire
+          academic journey
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="academy-card rounded-2xl p-8 border border-white/10">
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-12 h-12 rounded-lg bg-lime-400/20 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-file-alt text-lime-400"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold">Exam Paper Hub</h3>
+          </div>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            The largest repository of SADC exam papers with AI-powered insights.
+            Discover trending topics, frequently asked questions, and
+            intelligent predictions to focus your revision where it matters
+            most.
+          </p>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-lime-400 text-xs"></i>
+              <span>50,000+ exam papers across multiple syllabuses</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-lime-400 text-xs"></i>
+              <span>AI topic frequency analysis</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-lime-400 text-xs"></i>
+              <span>Curriculum-specific filtering</span>
+            </li>
+          </ul>
+        </div>
+        <div class="academy-card rounded-2xl p-8 border border-white/10">
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-12 h-12 rounded-lg bg-purple-400/20 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-pencil text-purple-400"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold">Smart Drawing Board</h3>
+          </div>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            An intuitive note-taking and drawing platform that lets you sketch
+            diagrams, annotate materials, and organize everything in one place.
+            Link notes to syllabus chapters for seamless organization.
+          </p>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-purple-400 text-xs"></i>
+              <span>Interactive canvas with drawing tools</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-purple-400 text-xs"></i>
+              <span>Syllabus chapter linking</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-purple-400 text-xs"></i>
+              <span>Collaboration features (Phase 3)</span>
+            </li>
+          </ul>
+        </div>
+        <div class="academy-card rounded-2xl p-8 border border-white/10">
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-12 h-12 rounded-lg bg-orange-400/20 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-calendar text-orange-400"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold">Auto-Planner</h3>
+          </div>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            An intelligent timetable generator that creates personalized study
+            schedules based on your subjects, exam dates, and available hours.
+            Automatic exam date fetching and smart study recommendations
+            included.
+          </p>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-orange-400 text-xs"></i>
+              <span>Automated exam date detection</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-orange-400 text-xs"></i>
+              <span>AI-powered study recommendations</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-orange-400 text-xs"></i>
+              <span>Flexible schedule customization</span>
+            </li>
+          </ul>
+        </div>
+        <div class="academy-card rounded-2xl p-8 border border-white/10">
+          <div class="flex items-center gap-4 mb-4">
+            <div
+              class="w-12 h-12 rounded-lg bg-blue-400/20 flex items-center justify-center"
+            >
+              <i class="fa-brands fa-youtube text-blue-400"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold">YouTube AI Intelligence</h3>
+          </div>
+          <p class="text-gray-300 leading-relaxed mb-4">
+            Transform any educational YouTube video into structured notes with
+            AI-generated transcripts, summaries, and translations. Extract key
+            concepts automatically.
+          </p>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-blue-400 text-xs"></i>
+              <span>Automatic transcript generation</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-blue-400 text-xs"></i>
+              <span>Multi-language translation</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <i class="fa-solid fa-check text-blue-400 text-xs"></i>
+              <span>AI-powered summaries and key points</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact & Goals -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="academy-card rounded-3xl p-12 border border-white/10">
+        <div class="text-center mb-12">
+          <span
+            class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+          >
+            <i class="fa-solid fa-chart-line mr-2"></i>Our Impact
+          </span>
+          <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+            Building a <span class="text-gradient">Better Future</span>
+          </h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div
+              class="w-20 h-20 rounded-full bg-lime-400/20 flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fa-solid fa-users text-lime-400 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold mb-3">Empowerment</h3>
+            <p class="text-gray-400 leading-relaxed">
+              Giving students the tools they need to take control of their
+              academic journey and achieve their full potential.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-20 h-20 rounded-full bg-purple-400/20 flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fa-solid fa-globe text-purple-400 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold mb-3">Accessibility</h3>
+            <p class="text-gray-400 leading-relaxed">
+              Making premium educational resources accessible to all students,
+              regardless of background or financial situation.
+            </p>
+          </div>
+          <div class="text-center">
+            <div
+              class="w-20 h-20 rounded-full bg-orange-400/20 flex items-center justify-center mx-auto mb-4"
+            >
+              <i class="fa-solid fa-trophy text-orange-400 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold mb-3">Excellence</h3>
+            <p class="text-gray-400 leading-relaxed">
+              Raising the standard of educational technology in Africa and
+              proving that world-class software can be built here, for here.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="max-w-7xl mx-auto px-6 py-16">
+      <div class="text-center mb-12">
+        <span
+          class="badge-purple px-5 py-2 rounded-full text-xs font-bold tracking-widest uppercase mb-6 inline-block"
+        >
+          <i class="fa-solid fa-envelope mr-2"></i>Get In Touch
+        </span>
+        <h2 class="text-4xl lg:text-5xl font-extrabold mb-6">
+          Let's <span class="text-gradient">Connect</span>
+        </h2>
+        <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+          Have questions, feedback, or want to partner with us? We'd love to
+          hear from you.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-lime-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-envelope text-lime-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-2">Email</h3>
+          <a
+            href="mailto:support@prysmlearn.com"
+            class="text-lime-400 hover:text-lime-300 transition-colors"
+            >support@prysmlearn.com</a
+          >
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-purple-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-phone text-purple-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-2">Phone</h3>
+          <a
+            href="tel:+264814989258"
+            class="text-lime-400 hover:text-lime-300 transition-colors"
+            >+264 81 498 9258</a
+          >
+        </div>
+        <div
+          class="academy-card rounded-2xl p-8 border border-white/10 text-center"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-orange-400/20 flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fa-solid fa-location-dot text-orange-400 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-extrabold mb-2">Location</h3>
+          <p class="text-gray-400">Windhoek, Namibia</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-6 py-16 border-t border-white/5">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <img
+              src="logo.png"
+              alt="Prysm Logo"
+              class="h-8 w-8"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div
+              class="w-8 h-8 bg-gradient-to-br from-lime-400 to-lime-300 rounded-lg flex items-center justify-center shadow-lg shadow-lime-400/30"
+              style="display: none"
+            >
+              <i class="fa-solid fa-p text-[#120d2b] text-sm font-black"></i>
+            </div>
+            <span
+              class="font-extrabold tracking-tight text-white uppercase text-xl"
+              >Prysm</span
+            >
+          </div>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            The Ultimate Student OS. Centralizing education for SADC students.
+          </p>
+        </div>
+        <div>
+          <h5 class="font-bold text-white mb-4">Product</h5>
+          <ul class="space-y-3 text-sm text-gray-400">
+            <li>
+              <a
+                href="front.html#features"
+                class="hover:text-lime-400 transition-colors"
+                >Features</a
+              >
+            </li>
+            <li>
+              <a
+                href="examhub.html"
+                class="hover:text-lime-400 transition-colors"
+                >Exam Hub</a
+              >
+            </li>
+            <li>
+              <a
+                href="canvas.html"
+                class="hover:text-lime-400 transition-colors"
+                >Drawing Board</a
+              >
+            </li>
+            <li>
+              <a
+                href="autoplanner.html"
+                class="hover:text-lime-400 transition-colors"
+                >Auto-Planner</a
+              >
+            </li>
+            <li>
+              <a
+                href="youtubeai.html"
+                class="hover:text-lime-400 transition-colors"
+                >YouTube AI</a
+              >
+            </li>
+            <li>
+              <a
+                href="parenthub.html"
+                class="hover:text-lime-400 transition-colors"
+                >Parent Hub</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold text-white mb-4">Company</h5>
+          <ul class="space-y-3 text-sm text-gray-400">
+            <li>
+              <a href="about.htm" class="hover:text-lime-400 transition-colors"
+                >About</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-lime-400 transition-colors">Blog</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-lime-400 transition-colors"
+                >Careers</a
+              >
+            </li>
+            <li>
+              <a href="#" class="hover:text-lime-400 transition-colors"
+                >Contact</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold text-white mb-4">Connect</h5>
+          <div class="flex gap-4 text-xl text-gray-400 mb-6">
+            <a
+              href="#"
+              class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-lime-400/10 hover:text-lime-400 transition-all"
+            >
+              <i class="fa-brands fa-discord"></i>
+            </a>
+            <a
+              href="#"
+              class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-lime-400/10 hover:text-lime-400 transition-all"
+            >
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a
+              href="#"
+              class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-lime-400/10 hover:text-lime-400 transition-all"
+            >
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+          </div>
+          <p class="text-xs text-gray-500 mb-2">
+            <i class="fa-solid fa-envelope mr-2 text-lime-400"></i>
+            <a
+              href="mailto:support@prysmlearn.com"
+              class="hover:text-lime-400 transition-colors"
+              >support@prysmlearn.com</a
+            >
+          </p>
+          <p class="text-xs text-gray-500 mb-2">
+            <i class="fa-solid fa-phone mr-2 text-lime-400"></i>
+            <a
+              href="tel:+264814989258"
+              class="hover:text-lime-400 transition-colors"
+              >+264 81 498 9258</a
+            >
+          </p>
+          <p class="text-xs text-gray-500">
+            <i class="fa-solid fa-location-dot mr-2 text-lime-400"></i>
+            Windhoek, Namibia
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-white/5 text-sm text-gray-500"
+      >
+        <p>© 2025 Prysm Academy. All rights reserved.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-lime-400 transition-colors"
+            >Privacy Policy</a
+          >
+          <a href="#" class="hover:text-lime-400 transition-colors"
+            >Terms of Service</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

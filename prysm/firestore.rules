@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Users collection - users can only access their own profile
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+      
+      // Users can create their own profile (on signup)
+      allow create: if isOwner(userId) 
+        && request.resource.data.uid == userId
+        && request.resource.data.email == request.auth.token.email;
+      
+      // Users can update their own profile
+      allow update: if isOwner(userId)
+        && request.resource.data.uid == userId; // Prevent changing uid
+      
+      // Users cannot delete their own profile (use admin SDK for this)
+      allow delete: if false;
+    }
+    
+    // Metadata collection - for user count and early users tracking
+    // Allowing authenticated writes for now (since no Cloud Functions)
+    // TODO: Move to Cloud Functions for better security
+    match /metadata/{document=**} {
+      // Anyone authenticated can read metadata
+      allow read: if isAuthenticated();
+      
+      // Authenticated users can write (for user count tracking)
+      // This is less secure but works without Cloud Functions
+      // Consider moving to Cloud Functions later for production
+      allow write: if isAuthenticated();
+    }
+    
+    // Future collections - add as you build features
+    
+    // Exam papers - when you add Exam Hub
+    match /exams/{examId} {
+      // Anyone authenticated can read exam papers
+      allow read: if isAuthenticated();
+      
+      // Only authenticated users can create (for community uploads)
+      allow create: if isAuthenticated()
+        && request.resource.data.uploadedBy == request.auth.uid;
+      
+      // Only owner can update/delete
+      allow update, delete: if isAuthenticated() 
+        && (resource.data.uploadedBy == request.auth.uid);
+    }
+    
+    // Notes/Drawings - when you add Canvas
+    match /notes/{noteId} {
+      allow read, write: if isAuthenticated() 
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // Schedules - when you add Auto-Planner
+    match /schedules/{scheduleId} {
+      allow read, write: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // YouTube AI transcripts - when you add YouTube AI
+    match /transcripts/{transcriptId} {
+      allow read, write: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+  }
+}
