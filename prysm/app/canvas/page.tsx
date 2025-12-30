@@ -25,15 +25,15 @@ export default function CanvasPage() {
               <div className="absolute top-32 left-40 opacity-60">
                 <div className="w-40 h-1 bg-blue-400 rounded-full transform rotate-[-15deg]"></div>
               </div>
-              <div className="absolute top-10 right-10 border border-white/10 rounded-xl p-3 bg-[#1d163d]/80 backdrop-blur-sm rotate-3">
+              <div className="absolute top-10 right-10 border border-[var(--border-color)] rounded-xl p-3 bg-[var(--prysm-card)]/80 backdrop-blur-sm rotate-3">
                 <p className="text-[10px] font-bold text-blue-400 uppercase">Canvas</p>
-                <p className="text-xs text-gray-300">Infinite Space</p>
+                <p className="text-xs text-[var(--text-secondary)]">Infinite Space</p>
               </div>
               <div className="absolute bottom-10 right-10 flex gap-2">
-                <div className="h-10 w-10 bg-white/5 rounded-lg flex items-center justify-center border border-blue-400/30 text-blue-400">
+                <div className="h-10 w-10 bg-[var(--bg-overlay)] rounded-lg flex items-center justify-center border border-blue-400/30 text-blue-400">
                   <i className="fa-solid fa-pencil text-sm"></i>
                 </div>
-                <div className="h-10 w-10 bg-white/5 rounded-lg flex items-center justify-center text-gray-400">
+                <div className="h-10 w-10 bg-[var(--bg-overlay)] rounded-lg flex items-center justify-center text-[var(--text-secondary)]">
                   <i className="fa-solid fa-shapes text-sm"></i>
                 </div>
               </div>
@@ -44,7 +44,7 @@ export default function CanvasPage() {
               Phase 1 Feature
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6">Smart Drawing Board</h1>
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">
+            <p className="text-lg sm:text-xl text-[var(--text-secondary)] mb-8 sm:mb-10">
               Visual notes for visual learners. Sketch diagrams, annotate study
               materials, and organize everything in one infinite canvas with cloud
               sync.
@@ -58,7 +58,7 @@ export default function CanvasPage() {
               <i className="fa-solid fa-layer-group text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Infinite Canvas</h3>
-            <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
               Unlimited drawing space to create complex diagrams, mind maps, and
               visual notes. Zoom, pan, and organize your ideas without limits.
             </p>
@@ -69,7 +69,7 @@ export default function CanvasPage() {
               <i className="fa-solid fa-cloud-arrow-up text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Cloud Sync</h3>
-            <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
               Access your drawings from any device, anywhere. All your visual
               notes are automatically synced and backed up in the cloud.
             </p>
@@ -80,7 +80,7 @@ export default function CanvasPage() {
               <i className="fa-solid fa-link text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Link to Syllabus</h3>
-            <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
               Connect your drawings directly to syllabus chapters and topics.
               Organize your visual notes by subject and curriculum area.
             </p>
@@ -91,7 +91,7 @@ export default function CanvasPage() {
               <i className="fa-solid fa-users text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
             </div>
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Collaboration (Coming)</h3>
-            <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
               Phase 3 will introduce real-time collaboration for group projects.
               Work together on diagrams and study materials with your classmates.
             </p>

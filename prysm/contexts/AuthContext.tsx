@@ -34,9 +34,11 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
+    username?: string,
+    privacyPolicyAccepted?: boolean
   ) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: (privacyPolicyAccepted?: boolean) => Promise<void>;
   signOut: () => Promise<void>;
   sendVerificationEmail: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -100,8 +102,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
+    username?: string,
+    privacyPolicyAccepted: boolean = false
   ) => {
+    if (!privacyPolicyAccepted) {
+      throw new Error(
+        "Privacy Policy and Terms must be accepted to create an account"
+      );
+    }
+
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -109,7 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Generate avatar URL
-    const photoURL = getUserAvatarUrl(displayName);
+    const photoURL = getUserAvatarUrl(displayName, undefined);
 
     // Update Firebase Auth profile
     await firebaseUpdateProfile(userCredential.user, { displayName, photoURL });
@@ -126,7 +136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       displayName,
       photoURL,
       isEarly,
-      signupNumber
+      signupNumber,
+      username,
+      privacyPolicyAccepted
     );
 
     // Generate JWT token
@@ -147,7 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await refreshUserProfile();
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (privacyPolicyAccepted: boolean = false) => {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
 
@@ -157,11 +169,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       userCredential.user.metadata.lastSignInTime;
 
     if (isNewUser) {
+      if (!privacyPolicyAccepted) {
+        // Don't create account if privacy policy not accepted
+        await firebaseSignOut(auth);
+        throw new Error(
+          "Privacy Policy and Terms must be accepted to create an account"
+        );
+      }
+
       // Generate avatar URL (use Google photo if available, otherwise generate)
       const photoURL =
         userCredential.user.photoURL ||
         getUserAvatarUrl(
-          userCredential.user.displayName || userCredential.user.email || "User"
+          userCredential.user.displayName || userCredential.user.email || "User",
+          undefined
         );
 
       // Check if user is early user and get signup number
@@ -169,14 +190,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userCredential.user.uid
       );
 
-      // Create user profile in Firestore
+      // Create user profile with privacy policy acceptance
       await createUserProfile(
         userCredential.user.uid,
         userCredential.user.email || "",
         userCredential.user.displayName || "User",
         photoURL,
         isEarly,
-        signupNumber
+        signupNumber,
+        undefined, // username
+        privacyPolicyAccepted
       );
     }
 
@@ -257,7 +280,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           : "User";
 
       // Generate avatar URL
-      const photoURL = getUserAvatarUrl(displayName);
+      const photoURL = getUserAvatarUrl(displayName, undefined);
 
       // Update Firebase Auth profile
       await firebaseUpdateProfile(userCredential.user, {

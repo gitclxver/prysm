@@ -61,14 +61,14 @@ export function WaitlistPopup() {
           transition={{ type: 'spring', damping: 20, stiffness: 300 }}
           className="fixed top-6 right-6 z-50 max-w-sm"
         >
-        <div className="bg-[#1d163d] border border-lime-400/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+        <div className="bg-[var(--prysm-card)] border border-[var(--lime)]/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden">
           {/* Glow effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-lime-400/20 to-purple-400/20 blur-xl opacity-50"></div>
+          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--lime)]/20 to-[var(--lavender)]/20 blur-xl opacity-50"></div>
           
           <div className="relative">
             <button
               onClick={handleDismiss}
-              className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-white/10 hover:bg-red-500/20 flex items-center justify-center text-gray-400 hover:text-red-400 transition-all z-10"
+              className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[var(--bg-overlay)] hover:bg-red-500/20 flex items-center justify-center text-[var(--text-secondary)] hover:text-red-400 transition-all z-10"
               aria-label="Close"
               type="button"
             >
@@ -76,8 +76,8 @@ export function WaitlistPopup() {
             </button>
 
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-lime-400 to-lime-300 flex items-center justify-center flex-shrink-0 shadow-lg shadow-lime-400/30">
-                <i className="fa-solid fa-star text-[#120d2b] text-xl"></i>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--lime)] to-[var(--lime)]/80 flex items-center justify-center flex-shrink-0 shadow-lg shadow-[var(--shadow-lime)]">
+                <i className="fa-solid fa-star text-[var(--prysm-bg)] text-xl"></i>
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
@@ -86,7 +86,7 @@ export function WaitlistPopup() {
                   </Badge>
                 </div>
                 <h3 className="text-lg font-extrabold mb-1">Join the Waitlist</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
                   Be among the first 200 users and earn your honorary student badge! Get early access to Prysm.
                 </p>
               </div>
@@ -94,7 +94,7 @@ export function WaitlistPopup() {
 
             <Link
               href="/login"
-              className="block w-full bg-[#d4ff80] text-[#120d2b] px-4 py-2.5 rounded-lg font-bold text-sm text-center hover:bg-[#b8eb4d] transition-all duration-300 shadow-lg shadow-lime-400/20 hover:shadow-xl hover:shadow-lime-400/30 hover:scale-105"
+              className="block w-full bg-[var(--lime)] text-[var(--prysm-bg)] px-4 py-2.5 rounded-lg font-bold text-sm text-center hover:bg-[var(--lime)]/80 transition-all duration-300 shadow-lg shadow-[var(--shadow-lime)] hover:shadow-xl hover:shadow-[var(--shadow-lime)] hover:scale-105"
             >
               Join Now
             </Link>

@@ -28,7 +28,7 @@ export default function PrintPage() {
           <div className="relative order-2 lg:order-1">
             <Card className="p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute -inset-4 bg-purple-400/10 blur-2xl rounded-full"></div>
-              <div className="relative bg-[#120d2b] rounded-2xl p-6 border border-white/5">
+              <div className="relative bg-[var(--prysm-bg)] rounded-2xl p-6 border border-[var(--border-color)]">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -40,34 +40,34 @@ export default function PrintPage() {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                  <div className="bg-[var(--bg-overlay)] rounded-xl p-4 border border-[var(--border-color)]">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-lg bg-purple-400/20 flex items-center justify-center">
                         <i className="fa-solid fa-book text-purple-400 text-sm"></i>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-400">Study Guide</p>
-                        <p className="text-sm font-bold text-white">NSSCO Biology Summary</p>
+                        <p className="text-xs text-[var(--text-secondary)]">Study Guide</p>
+                        <p className="text-sm font-bold text-[var(--text-primary)]">NSSCO Biology Summary</p>
                       </div>
                     </div>
-                    <div className="bg-white/5 rounded-lg p-3 mb-2">
+                    <div className="bg-[var(--bg-overlay)] rounded-lg p-3 mb-2">
                       <div className="h-32 bg-gradient-to-br from-purple-400/20 to-purple-600/10 rounded flex items-center justify-center">
                         <i className="fa-solid fa-file-pdf text-purple-400 text-3xl"></i>
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-400">Pages: 24</span>
+                      <span className="text-[var(--text-secondary)]">Pages: 24</span>
                       <span className="text-purple-400 font-bold">Ready to Print</span>
                     </div>
                   </div>
                   <div className="bg-purple-400/10 rounded-xl p-4 border border-purple-400/20">
                     <p className="text-xs font-bold text-purple-400 uppercase mb-2">Print Options</p>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-gray-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
                         <i className="fa-solid fa-check-circle text-purple-400"></i>
                         <span>Premium paper quality</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
                         <i className="fa-solid fa-check-circle text-purple-400"></i>
                         <span>Spiral binding included</span>
                       </div>
@@ -82,9 +82,9 @@ export default function PrintPage() {
               Coming Soon
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6">
-              Prysm <span className="bg-gradient-to-r from-[#d4ff80] to-[#e0d7ff] bg-clip-text text-transparent">Print</span>
+              Prysm <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">Print</span>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">
+            <p className="text-lg sm:text-xl text-[var(--text-secondary)] mb-8 sm:mb-10">
               Transform your digital notes and AI-generated summaries into premium physical study guides. Get professionally printed materials delivered to your door, perfect for offline studying.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -102,7 +102,7 @@ export default function PrintPage() {
                 <i className="fa-solid fa-file-pdf text-purple-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">AI-Generated Summaries</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Convert your digital notes into beautifully formatted PDF study guides. Our AI organizes content, highlights key points, and creates exam-focused summaries.
               </p>
             </Card>
@@ -114,7 +114,7 @@ export default function PrintPage() {
                 <i className="fa-solid fa-truck text-purple-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Premium Delivery</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Get professionally printed materials with premium paper quality, spiral binding, and protective covers. Delivered directly to your address across SADC.
               </p>
             </Card>
@@ -126,7 +126,7 @@ export default function PrintPage() {
                 <i className="fa-solid fa-mobile-screen-button text-purple-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Order from Anywhere</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Place orders directly from the Prysm web app or mobile app. Track your order status, receive delivery updates, and manage your print history all in one place.
               </p>
             </Card>

@@ -1,45 +1,88 @@
-'use client';
+"use client";
 
-import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
+import { useState, FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { PrivacyPolicyModal } from "@/components/PrivacyPolicyModal";
+import { sanitizeError } from "@/lib/utils/errorHandler";
 
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [usePasswordless, setUsePasswordless] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, signInWithGoogle, sendPasswordlessLink, user } = useAuth();
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"email" | "google" | null>(
+    null
+  );
+  const { signIn, signUp, signInWithGoogle, sendPasswordlessLink, user } =
+    useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
   if (user) {
-    router.push('/dashboard');
+    router.push("/dashboard");
     return null;
   }
 
   const handleEmailAuth = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
+
+    // For sign-up, check if privacy policy is accepted
+    if (isSignUp && !privacyAccepted) {
+      setError(
+        "Please accept the Privacy Policy and Terms of Service to continue"
+      );
+      setShowPrivacyModal(true);
+      return;
+    }
+
     setLoading(true);
 
     try {
       // Handle passwordless authentication
       if (usePasswordless) {
-        if (isSignUp && !displayName.trim()) {
-          setError('Display name is required');
-          setLoading(false);
-          return;
+        if (isSignUp) {
+          if (!displayName.trim()) {
+            setError("Full name is required");
+            setLoading(false);
+            return;
+          }
+          if (!username.trim()) {
+            setError("Username is required");
+            setLoading(false);
+            return;
+          }
+          if (!/^[a-zA-Z0-9_]{3,20}$/.test(username.trim())) {
+            setError(
+              "Username must be 3-20 characters and contain only letters, numbers, and underscores"
+            );
+            setLoading(false);
+            return;
+          }
+          if (!privacyAccepted) {
+            setError("Please accept the Privacy Policy and Terms of Service");
+            setShowPrivacyModal(true);
+            setLoading(false);
+            return;
+          }
         }
         await sendPasswordlessLink(email, isSignUp ? displayName : undefined);
-        setSuccess(`We've sent a sign-in link to ${email}. Please check your inbox and click the link to continue.`);
+        setSuccess(
+          `We've sent a sign-in link to ${email}. Please check your inbox and click the link to continue.`
+        );
         setLoading(false);
         return;
       }
@@ -47,56 +90,149 @@ export default function LoginPage() {
       // Handle traditional email/password authentication
       if (isSignUp) {
         if (!displayName.trim()) {
-          setError('Display name is required');
+          setError("Full name is required");
           setLoading(false);
           return;
         }
-        await signUp(email, password, displayName);
-        router.push('/verify-email');
+        if (!username.trim()) {
+          setError("Username is required");
+          setLoading(false);
+          return;
+        }
+        if (!/^[a-zA-Z0-9_]{3,20}$/.test(username.trim())) {
+          setError(
+            "Username must be 3-20 characters and contain only letters, numbers, and underscores"
+          );
+          setLoading(false);
+          return;
+        }
+        if (!privacyAccepted) {
+          setError("Please accept the Privacy Policy and Terms of Service");
+          setShowPrivacyModal(true);
+          setLoading(false);
+          return;
+        }
+        await signUp(
+          email,
+          password,
+          displayName,
+          username.trim(),
+          privacyAccepted
+        );
+        router.push("/verify-email");
       } else {
         await signIn(email, password);
-        router.push('/dashboard');
+        router.push("/dashboard");
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err: unknown) {
+      // Sanitize error to show only user-friendly messages
+      const userFriendlyError = sanitizeError(err);
+      setError(userFriendlyError);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const executeGoogleSignIn = async () => {
+    setLoading(true);
+
+    try {
+      await signInWithGoogle(privacyAccepted);
+      router.push("/dashboard");
+    } catch (err: unknown) {
+      // Sanitize error to show only user-friendly messages
+      // If popup was closed by user, don't show any error
+      const userFriendlyError = sanitizeError(err);
+      if (userFriendlyError) {
+        setError(userFriendlyError);
+      }
+      // If empty string returned, user closed popup - silently ignore
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
-    setLoading(true);
+    setError("");
 
-    try {
-      await signInWithGoogle();
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
-    } finally {
-      setLoading(false);
+    // Check if privacy policy is accepted first
+    if (!privacyAccepted) {
+      setPendingAction("google");
+      setShowPrivacyModal(true);
+      return;
+    }
+
+    await executeGoogleSignIn();
+  };
+
+  const handlePrivacyAccept = () => {
+    setPrivacyAccepted(true);
+    setShowPrivacyModal(false);
+
+    // If there was a pending action, execute it
+    if (pendingAction === "google") {
+      setPendingAction(null);
+      executeGoogleSignIn();
     }
   };
 
+  const handlePrivacyDecline = () => {
+    setShowPrivacyModal(false);
+    setPendingAction(null);
+    setError(
+      "You must accept the Privacy Policy and Terms of Service to create an account"
+    );
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+      {/* Back to Website Link */}
+      <Link
+        href="/"
+        className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--lime)] transition-colors group z-10"
+      >
+        <i className="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+        <span className="font-semibold">Back to Website</span>
+      </Link>
+
       <Card className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-lime-400 to-lime-300 rounded-lg flex items-center justify-center shadow-lg shadow-lime-400/30">
-              <span className="text-[#120d2b] text-sm font-black">P</span>
+            <div className="relative w-12 h-12">
+              <Image
+                src="/logo.png"
+                alt="Prysm Logo"
+                width={48}
+                height={48}
+                className="rounded-lg"
+                priority
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const fallback = e.currentTarget
+                    .nextElementSibling as HTMLElement;
+                  if (fallback) fallback.style.display = "flex";
+                }}
+              />
+              <div
+                className="w-12 h-12 bg-gradient-to-br from-[var(--lime)] to-[var(--lime)]/80 rounded-lg flex items-center justify-center shadow-lg shadow-[var(--shadow-lime)]"
+                style={{ display: "none" }}
+              >
+                <span className="text-[var(--prysm-bg)] text-lg font-black">
+                  P
+                </span>
+              </div>
             </div>
-            <span className="font-extrabold tracking-tight text-white uppercase text-2xl">
+            <span className="font-extrabold tracking-tight text-[var(--text-primary)] uppercase text-2xl">
               Prysm
             </span>
           </div>
           <h1 className="text-3xl font-extrabold mb-2">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
+            {isSignUp ? "Create Account" : "Welcome Back"}
           </h1>
-          <p className="text-gray-400">
+          <p className="text-[var(--text-secondary)]">
             {isSignUp
-              ? 'Join the first 200 users and get early access'
-              : 'Sign in to continue to your account'}
+              ? "Join the first 200 users and get early access"
+              : "Sign in to continue to your account"}
           </p>
         </div>
 
@@ -120,20 +256,56 @@ export default function LoginPage() {
 
         <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
           {isSignUp && (
-            <div>
-              <label htmlFor="displayName" className="block text-sm font-semibold mb-2">
-                Display Name
-              </label>
-              <input
-                id="displayName"
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
-                placeholder="Enter your name"
-                required
-              />
-            </div>
+            <>
+              <div>
+                <label
+                  htmlFor="displayName"
+                  className="block text-sm font-semibold mb-2"
+                >
+                  Full Name <span className="text-red-400">*</span>
+                </label>
+                <input
+                  id="displayName"
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+                  placeholder="Enter Your Full Name"
+                  required
+                  minLength={2}
+                />
+                <p className="text-xs text-[var(--text-tertiary)] mt-1">
+                  This will be displayed on your profile
+                </p>
+              </div>
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-semibold mb-2"
+                >
+                  Username <span className="text-red-400">*</span>
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) =>
+                    setUsername(
+                      e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "")
+                    )
+                  }
+                  className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+                  placeholder="Enter Your Username"
+                  required
+                  minLength={3}
+                  maxLength={20}
+                  pattern="[a-zA-Z0-9_]{3,20}"
+                />
+                <p className="text-xs text-[var(--text-tertiary)] mt-1">
+                  3-20 characters, letters, numbers, and underscores only
+                </p>
+              </div>
+            </>
           )}
 
           <div>
@@ -145,15 +317,18 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
-              placeholder="you@example.com"
+              className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+              placeholder="Enter Your Email"
               required
             />
           </div>
 
           {!usePasswordless && (
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold mb-2"
+              >
                 Password
               </label>
               <input
@@ -161,8 +336,8 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
-                placeholder="••••••••"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+                placeholder="Enter Your Password"
                 required
                 minLength={6}
               />
@@ -176,13 +351,16 @@ export default function LoginPage() {
               checked={usePasswordless}
               onChange={(e) => {
                 setUsePasswordless(e.target.checked);
-                setPassword('');
-                setError('');
-                setSuccess('');
+                setPassword("");
+                setError("");
+                setSuccess("");
               }}
-              className="w-4 h-4 rounded border-white/20 bg-white/5 text-[#d4ff80] focus:ring-[#d4ff80] focus:ring-offset-0"
+              className="w-4 h-4 rounded border-[var(--border-color)] bg-[var(--bg-overlay)] text-[var(--lime)] focus:ring-[var(--lime)] focus:ring-offset-0"
             />
-            <label htmlFor="passwordless" className="text-sm text-gray-400 cursor-pointer">
+            <label
+              htmlFor="passwordless"
+              className="text-xs sm:text-sm text-[var(--text-secondary)] cursor-pointer"
+            >
               Sign in with email link (no password required)
             </label>
           </div>
@@ -191,7 +369,7 @@ export default function LoginPage() {
             <div className="text-right">
               <a
                 href="/forgot-password"
-                className="text-sm text-[#d4ff80] hover:underline"
+                className="text-sm text-[var(--lime)] hover:underline"
               >
                 Forgot password?
               </a>
@@ -204,23 +382,28 @@ export default function LoginPage() {
             className="w-full"
             disabled={loading || !!success}
           >
-            {loading 
-              ? 'Loading...' 
-              : success 
-                ? 'Link Sent!' 
-                : usePasswordless 
-                  ? (isSignUp ? 'Send Sign-Up Link' : 'Send Sign-In Link')
-                  : (isSignUp ? 'Sign Up' : 'Sign In')
-            }
+            {loading
+              ? "Loading..."
+              : success
+              ? "Link Sent!"
+              : usePasswordless
+              ? isSignUp
+                ? "Send Sign-Up Link"
+                : "Send Sign-In Link"
+              : isSignUp
+              ? "Sign Up"
+              : "Sign In"}
           </Button>
         </form>
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/10"></div>
+            <div className="w-full border-t border-[var(--border-color)]"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-4 bg-[#1d163d] text-gray-400">Or continue with</span>
+            <span className="px-4 bg-[var(--prysm-card)] text-[var(--text-secondary)]">
+              Or continue with
+            </span>
           </div>
         </div>
 
@@ -254,23 +437,23 @@ export default function LoginPage() {
           </div>
         </Button>
 
-        <div className="text-center text-sm text-gray-400">
+        <div className="text-center text-sm text-[var(--text-secondary)]">
           {isSignUp ? (
             <>
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
                 onClick={() => setIsSignUp(false)}
-                className="text-[#d4ff80] hover:underline font-semibold"
+                className="text-[var(--lime)] hover:underline font-semibold"
               >
                 Sign In
               </button>
             </>
           ) : (
             <>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{" "}
               <button
                 onClick={() => setIsSignUp(true)}
-                className="text-[#d4ff80] hover:underline font-semibold"
+                className="text-[var(--lime)] hover:underline font-semibold"
               >
                 Sign Up
               </button>
@@ -278,7 +461,13 @@ export default function LoginPage() {
           )}
         </div>
       </Card>
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal
+        isOpen={showPrivacyModal}
+        onAccept={handlePrivacyAccept}
+        onDecline={handlePrivacyDecline}
+      />
     </div>
   );
 }
-

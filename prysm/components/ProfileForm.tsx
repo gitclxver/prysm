@@ -5,15 +5,19 @@ import { useAuth } from '@/hooks/useAuth';
 import { updateUserProfile } from '@/lib/firebase/profile';
 import { getUserAvatarUrl } from '@/lib/avatar';
 import { countryRegions, gradeLevels, countrySyllabi, universities } from '@/lib/data/regions';
+import { SchoolSearch } from './SchoolSearch';
+import { incrementSchoolStudentCount } from '@/lib/firebase/schools';
 import { Button } from './Button';
 import { Card } from './Card';
 import { motion } from 'framer-motion';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export function ProfileForm() {
   const { user, userProfile, refreshUserProfile } = useAuth();
+  const { themePreference } = useTheme();
   const [displayName, setDisplayName] = useState(userProfile?.displayName || '');
   const [bio, setBio] = useState(userProfile?.bio || '');
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(userProfile?.theme || 'system');
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(userProfile?.theme || themePreference || 'system');
   const [emailNotifications, setEmailNotifications] = useState(userProfile?.notifications?.email ?? true);
   const [pushNotifications, setPushNotifications] = useState(userProfile?.notifications?.push ?? false);
   
@@ -21,6 +25,7 @@ export function ProfileForm() {
   const [country, setCountry] = useState<'Namibia' | 'South Africa' | 'Eswatini' | ''>(userProfile?.country || '');
   const [region, setRegion] = useState(userProfile?.region || '');
   const [school, setSchool] = useState(userProfile?.school || '');
+  const [schoolId, setSchoolId] = useState<string | undefined>(undefined);
   const [grade, setGrade] = useState(userProfile?.grade || '');
   const [level, setLevel] = useState(userProfile?.level || '');
   const [syllabus, setSyllabus] = useState(userProfile?.syllabus || '');
@@ -44,7 +49,18 @@ export function ProfileForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   
-  const avatarUrl = getUserAvatarUrl(displayName || user?.email || 'User', 96);
+  const avatarUrl = getUserAvatarUrl(
+    displayName || user?.email || 'User',
+    userProfile?.photoURL || user?.photoURL || null,
+    96
+  );
+
+  // Sync theme from userProfile when it changes
+  useEffect(() => {
+    if (userProfile?.theme && userProfile.theme !== theme) {
+      setTheme(userProfile.theme);
+    }
+  }, [userProfile?.theme, theme]);
 
   // Update available regions when country changes
   const availableRegions = country ? countryRegions[country] || [] : [];
@@ -86,7 +102,10 @@ export function ProfileForm() {
       }
 
       // Generate avatar URL based on display name
-      const photoURL = getUserAvatarUrl(displayName || user.email || 'User');
+      const photoURL = getUserAvatarUrl(
+        displayName || user.email || 'User',
+        userProfile?.photoURL || user?.photoURL || null
+      );
 
       // Determine syllabus if not set but country is selected
       let finalSyllabus = syllabus;
@@ -117,7 +136,17 @@ export function ProfileForm() {
         university: (university === 'Other' ? otherUniversity : university) || undefined,
       });
 
-      // Refresh user profile
+      // Increment school student count if school was selected
+      if (schoolId && school) {
+        try {
+          await incrementSchoolStudentCount(schoolId);
+        } catch (error) {
+          console.error("Error incrementing school student count:", error);
+          // Don't fail the profile update if this fails
+        }
+      }
+
+      // Refresh user profile (ThemeContext will automatically sync theme from userProfile)
       await refreshUserProfile();
       
       setSuccess(true);
@@ -149,7 +178,7 @@ export function ProfileForm() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-4 bg-[#d4ff80]/10 border border-[#d4ff80]/20 rounded-lg text-[#d4ff80] text-sm"
+          className="p-4 bg-[var(--lime)]/10 border border-[var(--lime)]/20 rounded-lg text-[var(--lime)] text-sm"
         >
           Profile updated successfully!
         </motion.div>
@@ -160,7 +189,7 @@ export function ProfileForm() {
         <label className="block text-sm font-semibold mb-4">Profile Picture</label>
         <div className="flex items-center gap-6">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-white/5 border-2 border-white/10">
+            <div className="w-24 h-24 rounded-full overflow-hidden bg-[var(--bg-overlay)] border-2 border-[var(--border-color)]">
               <img
                 src={avatarUrl}
                 alt="Avatar"
@@ -169,7 +198,7 @@ export function ProfileForm() {
             </div>
           </div>
           <div>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[var(--text-secondary)]">
               Your avatar is automatically generated from your display name. Change your name above to update it.
             </p>
           </div>
@@ -186,7 +215,7 @@ export function ProfileForm() {
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
+          className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
           placeholder="Enter your display name"
           required
         />
@@ -202,19 +231,19 @@ export function ProfileForm() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           rows={4}
-          className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors resize-none"
+          className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors resize-none"
           placeholder="Tell us about yourself..."
           maxLength={500}
         />
-        <p className="text-xs text-gray-500 mt-2">{bio.length}/500</p>
+        <p className="text-xs text-[var(--text-tertiary)] mt-2">{bio.length}/500</p>
       </Card>
 
       {/* Academic Information Section */}
       <div className="space-y-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-lime-400/30 to-transparent"></div>
-          <h2 className="text-xl font-extrabold text-white">Academic Information</h2>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-lime-400/30 to-transparent"></div>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--lime)]/30 to-transparent"></div>
+          <h2 className="text-xl font-extrabold text-[var(--text-primary)]">Academic Information</h2>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--lime)]/30 to-transparent"></div>
         </div>
 
         {/* Country */}
@@ -226,7 +255,7 @@ export function ProfileForm() {
             id="country"
             value={country}
             onChange={(e) => setCountry(e.target.value as 'Namibia' | 'South Africa' | 'Eswatini' | '')}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+            className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
             required
           >
             <option value="">Select your country</option>
@@ -251,7 +280,7 @@ export function ProfileForm() {
                 id="region"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Select your region</option>
                 {availableRegions.map((reg) => (
@@ -264,20 +293,33 @@ export function ProfileForm() {
           </motion.div>
         )}
 
-        {/* School */}
-        <Card hover={false} className="academy-card">
-          <label htmlFor="school" className="block text-sm font-semibold mb-2">
-            School Name
-          </label>
-          <input
-            id="school"
-            type="text"
-            value={school}
-            onChange={(e) => setSchool(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
-            placeholder="Enter your school name"
-          />
-        </Card>
+        {/* School - Smart Search */}
+        {country && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card hover={false} className="academy-card">
+              <label htmlFor="school" className="block text-sm font-semibold mb-2">
+                School Name
+              </label>
+              <SchoolSearch
+                value={school}
+                onChange={(schoolName, schoolId) => {
+                  setSchool(schoolName);
+                  setSchoolId(schoolId);
+                }}
+                country={country}
+                region={region}
+                placeholder="Search for your school..."
+              />
+              <p className="text-xs text-[var(--text-tertiary)] mt-2">
+                Search for your school or add it if it&apos;s not in our database. This helps us connect you with students and tutors at your school.
+              </p>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Grade */}
         {country && (
@@ -294,7 +336,7 @@ export function ProfileForm() {
                 id="grade"
                 value={grade}
                 onChange={(e) => setGrade(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Select your grade</option>
                 {availableGrades.map((g) => (
@@ -322,7 +364,7 @@ export function ProfileForm() {
                 id="level"
                 value={level}
                 onChange={(e) => setLevel(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Select your level</option>
                 {availableLevels.map((l) => (
@@ -350,7 +392,7 @@ export function ProfileForm() {
                 id="syllabus"
                 value={syllabus}
                 onChange={(e) => setSyllabus(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Select your syllabus</option>
                 {availableSyllabi.map((s) => (
@@ -360,7 +402,7 @@ export function ProfileForm() {
                 ))}
               </select>
               {country === 'South Africa' && (
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-[var(--text-secondary)] mt-2">
                   CAPS: Public schools | IEB: Private/Independent schools
                 </p>
               )}
@@ -370,10 +412,10 @@ export function ProfileForm() {
 
         {/* University Student Toggle */}
         <Card hover={false} className="academy-card">
-          <label className="flex items-center justify-between p-3 bg-white/5 rounded-lg cursor-pointer">
-            <div>
-              <span className="text-white font-semibold block">I am a University Student</span>
-              <span className="text-xs text-gray-400">Check this if you're currently studying at a university</span>
+          <label className="flex items-center justify-between p-3 bg-[var(--bg-overlay)] rounded-lg cursor-pointer">
+              <div>
+              <span className="text-[var(--text-primary)] font-semibold block">I am a University Student</span>
+              <span className="text-xs text-[var(--text-secondary)]">Check this if you're currently studying at a university</span>
             </div>
             <input
               type="checkbox"
@@ -384,7 +426,7 @@ export function ProfileForm() {
                   setUniversity('');
                 }
               }}
-              className="w-5 h-5 text-[#d4ff80] focus:ring-[#d4ff80] rounded"
+              className="w-5 h-5 text-[var(--lime)] focus:ring-[var(--lime)] rounded"
             />
           </label>
         </Card>
@@ -404,7 +446,7 @@ export function ProfileForm() {
                 id="university"
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-[#d4ff80] transition-colors appearance-none cursor-pointer"
+                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--lime)] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">Select your university</option>
                 {availableUniversities.map((uni) => (
@@ -423,7 +465,7 @@ export function ProfileForm() {
                     type="text"
                     value={otherUniversity}
                     onChange={(e) => setOtherUniversity(e.target.value)}
-                    className="w-full mt-3 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#d4ff80] transition-colors"
+                    className="w-full mt-3 px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
                     placeholder="Enter your university name"
                   />
                 </motion.div>
@@ -437,7 +479,7 @@ export function ProfileForm() {
       <div className="space-y-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-lime-400/30 to-transparent"></div>
-          <h2 className="text-xl font-extrabold text-white">Preferences</h2>
+          <h2 className="text-xl font-extrabold text-[var(--text-primary)]">Preferences</h2>
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-lime-400/30 to-transparent"></div>
         </div>
 
@@ -448,7 +490,7 @@ export function ProfileForm() {
             {(['light', 'dark', 'system'] as const).map((option) => (
               <label
                 key={option}
-                className="flex items-center gap-3 p-3 bg-white/5 rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
+                className="flex items-center gap-3 p-3 bg-[var(--bg-overlay)] rounded-lg cursor-pointer hover:bg-[var(--bg-overlay)]/80 transition-colors"
               >
                 <input
                   type="radio"
@@ -458,7 +500,7 @@ export function ProfileForm() {
                   onChange={(e) => setTheme(e.target.value as 'light' | 'dark' | 'system')}
                   className="w-4 h-4 text-[#d4ff80] focus:ring-[#d4ff80]"
                 />
-                <span className="text-white capitalize">{option}</span>
+                <span className="text-[var(--text-primary)] capitalize">{option}</span>
               </label>
             ))}
           </div>
@@ -468,22 +510,22 @@ export function ProfileForm() {
         <Card hover={false} className="academy-card">
           <label className="block text-sm font-semibold mb-4">Notification Settings</label>
           <div className="space-y-3">
-            <label className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-              <span className="text-white">Email Notifications</span>
+            <label className="flex items-center justify-between p-3 bg-[var(--bg-overlay)] rounded-lg">
+              <span className="text-[var(--text-primary)]">Email Notifications</span>
               <input
                 type="checkbox"
                 checked={emailNotifications}
                 onChange={(e) => setEmailNotifications(e.target.checked)}
-                className="w-5 h-5 text-[#d4ff80] focus:ring-[#d4ff80] rounded"
+                className="w-5 h-5 text-[var(--lime)] focus:ring-[var(--lime)] rounded"
               />
             </label>
-            <label className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-              <span className="text-white">Push Notifications</span>
+            <label className="flex items-center justify-between p-3 bg-[var(--bg-overlay)] rounded-lg">
+              <span className="text-[var(--text-primary)]">Push Notifications</span>
               <input
                 type="checkbox"
                 checked={pushNotifications}
                 onChange={(e) => setPushNotifications(e.target.checked)}
-                className="w-5 h-5 text-[#d4ff80] focus:ring-[#d4ff80] rounded"
+                className="w-5 h-5 text-[var(--lime)] focus:ring-[var(--lime)] rounded"
               />
             </label>
           </div>

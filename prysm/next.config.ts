@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Reduce polyfills for modern browsers
+  transpilePackages: [],
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
 };
 
 export default nextConfig;

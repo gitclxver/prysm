@@ -36,35 +36,35 @@ export default function ToolsPage() {
             </Badge>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
-            Everything You Need to <span className="bg-gradient-to-r from-[#d4ff80] to-[#e0d7ff] bg-clip-text text-transparent">Succeed</span>
+            Everything You Need to <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">Succeed</span>
           </h1>
-          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
             The core modules available at launch. Built to centralize your entire
             academic journey.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          <AnimatedCard delay={0.1} className="academy-card border-l-4 border-l-lime-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d]">
-            <div className="w-14 h-14 bg-lime-400/10 rounded-xl flex items-center justify-center text-lime-400 mb-6">
+          <AnimatedCard delay={0.1} className="academy-card border-l-4 border-l-[var(--lime)] border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]">
+            <div className="w-14 h-14 bg-[var(--lime)]/10 rounded-xl flex items-center justify-center text-[var(--lime)] mb-6">
               <i className="fa-solid fa-file-invoice text-2xl feature-icon"></i>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-white">Exam Hub</h3>
-              <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">Exam Hub</h3>
+              <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
                 Access thousands of past papers from Namibia (NSSCO), South Africa (CAPS & IEB), Eswatini (EGCSE), IGCSE, Zimbabwe (ZIMSEC), and Botswana (BGCSE). AI identifies most frequently asked questions and trending topics.
               </p>
-            <Link href="/examhub" className="text-lime-400 text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">
+            <Link href="/examhub" className="text-[var(--lime)] text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">
               Explore Exam Hub
               <i className="fa-solid fa-arrow-right"></i>
             </Link>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.2} className="academy-card border-l-4 border-l-purple-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.2} className="academy-card border-l-4 border-l-purple-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]">
             <div className="w-14 h-14 bg-purple-400/10 rounded-xl flex items-center justify-center text-purple-400 mb-6">
               <i className="fa-solid fa-calendar-check text-2xl feature-icon"></i>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-white">Auto-Planner</h3>
-            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">Auto-Planner</h3>
+            <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
               Input your subjects and available study hours. Prysm automatically fetches exam dates from your syllabus and builds an optimized study schedule with smart recommendations.
             </p>
             <Link href="/autoplanner" className="text-purple-400 text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">
@@ -73,12 +73,12 @@ export default function ToolsPage() {
             </Link>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.3} className="academy-card border-l-4 border-l-blue-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.3} className="academy-card border-l-4 border-l-blue-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]">
             <div className="w-14 h-14 bg-blue-400/10 rounded-xl flex items-center justify-center text-blue-400 mb-6">
               <i className="fa-solid fa-pen-nib text-2xl feature-icon"></i>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-white">Drawing Board</h3>
-            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">Drawing Board</h3>
+            <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
               Smart drawing board with infinite canvas. Sketch diagrams, annotate study materials, and link notes to syllabus chapters. Cloud sync included.
             </p>
             <Link href="/canvas" className="text-blue-400 text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">
@@ -87,12 +87,12 @@ export default function ToolsPage() {
             </Link>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.4} className="academy-card border-l-4 border-l-orange-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.4} className="academy-card border-l-4 border-l-orange-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]">
             <div className="w-14 h-14 bg-orange-400/10 rounded-xl flex items-center justify-center text-orange-400 mb-6">
               <i className="fa-brands fa-youtube text-2xl feature-icon"></i>
             </div>
-            <h3 className="text-xl font-bold mb-4 text-white">YouTube AI</h3>
-            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">YouTube AI</h3>
+            <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
               Paste any YouTube link and get instant transcripts, AI-powered summaries, and translations. Never miss a key point from your study videos again.
             </p>
             <Link href="/youtubeai" className="text-orange-400 text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">

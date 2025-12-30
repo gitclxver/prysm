@@ -64,19 +64,19 @@ export default function AuthCallbackPage() {
       <Card className="max-w-md w-full">
         <div className="text-center">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-br from-lime-400 to-lime-300 rounded-lg flex items-center justify-center shadow-lg shadow-lime-400/30">
-              <span className="text-[#120d2b] text-sm font-black">P</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-[var(--lime)] to-[var(--lime)]/80 rounded-lg flex items-center justify-center shadow-lg shadow-[var(--shadow-lime)]">
+              <span className="text-[var(--prysm-bg)] text-sm font-black">P</span>
             </div>
-            <span className="font-extrabold tracking-tight text-white uppercase text-2xl">
+            <span className="font-extrabold tracking-tight text-[var(--text-primary)] uppercase text-2xl">
               Prysm
             </span>
           </div>
 
           {status === 'loading' && (
             <>
-              <div className="w-16 h-16 border-4 border-[#d4ff80] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <div className="w-16 h-16 border-4 border-[var(--lime)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <h1 className="text-2xl font-extrabold mb-2">Verifying...</h1>
-              <p className="text-gray-400">{message}</p>
+              <p className="text-[var(--text-secondary)]">{message}</p>
             </>
           )}
 
@@ -86,7 +86,7 @@ export default function AuthCallbackPage() {
                 <i className="fa-solid fa-check text-green-400 text-2xl"></i>
               </div>
               <h1 className="text-2xl font-extrabold mb-2 text-green-400">Success!</h1>
-              <p className="text-gray-400">{message}</p>
+              <p className="text-[var(--text-secondary)]">{message}</p>
             </>
           )}
 
@@ -96,10 +96,10 @@ export default function AuthCallbackPage() {
                 <i className="fa-solid fa-exclamation-triangle text-red-400 text-2xl"></i>
               </div>
               <h1 className="text-2xl font-extrabold mb-2 text-red-400">Error</h1>
-              <p className="text-gray-400 mb-6">{message}</p>
+              <p className="text-[var(--text-secondary)] mb-6">{message}</p>
               <button
                 onClick={() => router.push('/login')}
-                className="px-6 py-3 bg-[#d4ff80] text-[#120d2b] font-bold rounded-lg hover:bg-[#b8eb4d] transition-colors"
+                className="px-6 py-3 bg-[var(--lime)] text-[var(--prysm-bg)] font-bold rounded-lg hover:bg-[var(--lime)]/80 transition-colors"
               >
                 Go to Login
               </button>

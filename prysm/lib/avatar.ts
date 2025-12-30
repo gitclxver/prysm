@@ -43,14 +43,18 @@ export function generateAvatarUrl(name: string, size: number = 200): string {
 /**
  * Get avatar URL for a user
  * Falls back to generated avatar if no photoURL is provided
+ * @param displayName - User's display name (used for fallback avatar generation)
+ * @param photoURL - Optional photo URL (if provided, returns this directly)
+ * @param size - Optional size for generated avatar (default: 200)
  */
 export function getUserAvatarUrl(
   displayName: string,
-  photoURL?: string | null
+  photoURL?: string | null,
+  size?: number
 ): string {
   if (photoURL) {
     return photoURL;
   }
-  return generateAvatarUrl(displayName);
+  return generateAvatarUrl(displayName, size);
 }
 

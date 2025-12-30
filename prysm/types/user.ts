@@ -1,20 +1,26 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from "firebase/firestore";
 
 export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
+  username?: string;
   photoURL?: string;
   bio?: string;
-  theme: 'light' | 'dark' | 'system';
+  theme: "light" | "dark" | "system";
   notifications: {
     email: boolean;
     push: boolean;
   };
   isEarlyUser: boolean;
   signupNumber?: number; // User's position in the first 200 (1-200)
+  // Privacy & Terms
+  privacyPolicyAccepted?: boolean;
+  privacyPolicyAcceptedAt?: Timestamp;
+  termsAccepted?: boolean;
+  termsAcceptedAt?: Timestamp;
   // Academic Information
-  country?: 'Namibia' | 'South Africa' | 'Eswatini';
+  country?: "Namibia" | "South Africa" | "Eswatini";
   region?: string;
   school?: string;
   grade?: string;
@@ -30,4 +36,3 @@ export interface UserMetadata {
   userCount: number;
   earlyUsers: string[]; // Array of user IDs
 }
-

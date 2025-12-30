@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const { user, userProfile, signOut } = useAuth();
   const avatarUrl = getUserAvatarUrl(
     userProfile?.displayName || user?.displayName || user?.email || 'User',
+    userProfile?.photoURL || user?.photoURL || null,
     32
   );
 
@@ -28,7 +29,7 @@ export default function DashboardPage() {
               <h1 className="text-4xl font-extrabold mb-2">
                 Welcome back, {userProfile?.displayName || user?.displayName || 'User'}! 👋
               </h1>
-              <p className="text-gray-400">
+              <p className="text-[var(--text-secondary)]">
                 {userProfile?.isEarlyUser 
                   ? userProfile.signupNumber
                     ? `You're ${userProfile.signupNumber} of the first 200! 🎉`
@@ -44,7 +45,7 @@ export default function DashboardPage() {
                 <img
                   src={avatarUrl}
                   alt="Profile"
-                  className="w-10 h-10 rounded-full border-2 border-lime-400/30 cursor-pointer hover:border-lime-400/60 transition-colors"
+                  className="w-10 h-10 rounded-full border-2 border-[var(--lime)]/30 cursor-pointer hover:border-[var(--lime)]/60 transition-colors"
                 />
               </Link>
               <Button variant="outline" onClick={signOut}>
@@ -62,7 +63,7 @@ export default function DashboardPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
               <h3 className="text-xl font-extrabold mb-2">Profile Status</h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-[var(--text-secondary)] mb-4">
                 {userProfile ? 'Profile created' : 'Complete your profile'}
               </p>
               <Link href="/profile">
@@ -74,7 +75,7 @@ export default function DashboardPage() {
 
             <Card>
               <h3 className="text-xl font-extrabold mb-2">Email Verification</h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-[var(--text-secondary)] mb-4">
                 {user?.emailVerified ? 'Email verified ✓' : 'Verify your email'}
               </p>
               {!user?.emailVerified && (
@@ -88,7 +89,7 @@ export default function DashboardPage() {
 
             <Card>
               <h3 className="text-xl font-extrabold mb-2">Account Info</h3>
-              <div className="space-y-2 text-sm text-gray-400">
+              <div className="space-y-2 text-sm text-[var(--text-secondary)]">
                 <p>Email: {user?.email}</p>
                 <p>Joined: {userProfile?.createdAt?.toDate().toLocaleDateString() || 'Recently'}</p>
               </div>

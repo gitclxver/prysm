@@ -2,37 +2,175 @@
 
 /* Critical CSS - Load first */
 
+/* Critical CSS - Load first */
+
+/* Dark Mode (Default) */
 :root {
   --prysm-bg: #120d2b;
   --prysm-card: #1d163d;
+  --prysm-card-hover: #251c4a;
   --lavender: #e0d7ff;
   --lime: #d4ff80;
   --background: var(--prysm-bg);
   --foreground: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --border-color: rgba(255, 255, 255, 0.05);
+  --border-hover: rgba(212, 255, 128, 0.3);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --shadow-lime: rgba(212, 255, 128, 0.1);
+  --bg-overlay: rgba(255, 255, 255, 0.03);
+  --bg-overlay-hover: rgba(255, 255, 255, 0.05);
+  --bg-overlay-active: rgba(255, 255, 255, 0.08);
+  --gradient-lime-start: rgba(212, 255, 128, 0.03);
+  --gradient-lavender-start: rgba(224, 215, 255, 0.03);
+  --select-bg: #1d163d;
+  --select-text: white;
+}
+
+/* Light Mode */
+[data-theme="light"] {
+  --prysm-bg: #faf8f5;
+  --prysm-card: #f0ecff;
+  --prysm-card-hover: #e8e0ff;
+  --lavender: #c4b5fd;
+  --lime: #7a9f4f;
+  --background: var(--prysm-bg);
+  --foreground: #2d2d2d;
+  --text-primary: #2d2d2d;
+  --text-secondary: rgba(45, 45, 45, 0.8);
+  --text-tertiary: rgba(45, 45, 45, 0.6);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(122, 159, 79, 0.4);
+  --shadow-color: rgba(0, 0, 0, 0.05);
+  --shadow-lime: rgba(122, 159, 79, 0.15);
+  --bg-overlay: rgba(0, 0, 0, 0.02);
+  --bg-overlay-hover: rgba(0, 0, 0, 0.04);
+  --bg-overlay-active: rgba(0, 0, 0, 0.06);
+  --gradient-lime-start: rgba(122, 159, 79, 0.08);
+  --gradient-lavender-start: rgba(196, 181, 253, 0.08);
+  --select-bg: #f0ecff;
+  --select-text: #2d2d2d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-mono: var(--font-geist-mono);
+}
+
+html {
+  /* Prevent overscroll bounce on mobile */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: none;
 }
 
 body {
   background-color: var(--prysm-bg);
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(212, 255, 128, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(224, 215, 255, 0.03) 0%, transparent 50%);
+  background-image: radial-gradient(
+      circle at 20% 50%,
+      var(--gradient-lime-start) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      var(--gradient-lavender-start) 0%,
+      transparent 50%
+    );
   color: var(--foreground);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
-  transition: background-color 0.3s ease;
+  /* Prevent overscroll bounce on mobile */
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  /* Prevent elastic scrolling on iOS */
+  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Font metric overrides to prevent layout shift */
+  font-size-adjust: 0.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout shifts on mobile */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
-/* Smooth page transitions */
+/* Smooth page transitions - optimized for performance */
 * {
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Optimize animations to use GPU */
+[class*="motion-"],
+[class*="animate-"] {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Prevent overscroll and bouncing on mobile */
+@media (max-width: 768px) {
+  html,
+  body {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent elastic scrolling on iOS Safari */
+  body {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ensure main content doesn't cause scroll issues */
+  #main-content {
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
 }
 
 /* Enhanced scroll experience */
@@ -61,14 +199,9 @@ section {
   transform: translateX(-50%);
   width: 0;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--lime),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 8px rgba(212, 255, 128, 0.5);
+  box-shadow: 0 0 8px var(--shadow-lime);
 }
 
 .nav-link:hover::after,
@@ -98,12 +231,7 @@ section {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--lime),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--lime), transparent);
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -111,8 +239,12 @@ section {
 .academy-card:hover {
   border-color: var(--lime);
   transform: translateY(-6px);
-  background: linear-gradient(135deg, #251c4a 0%, #1d163d 100%);
-  box-shadow: 0 20px 40px rgba(212, 255, 128, 0.1);
+  background: linear-gradient(
+    135deg,
+    var(--prysm-card-hover) 0%,
+    var(--prysm-card) 100%
+  );
+  box-shadow: 0 20px 40px var(--shadow-lime);
 }
 
 .academy-card:hover::before {
@@ -135,21 +267,24 @@ section {
 }
 
 .faq-item:hover {
-  background: linear-gradient(135deg, #251c4a 0%, #1d163d 100%);
+  background: linear-gradient(
+    135deg,
+    var(--prysm-card-hover) 0%,
+    var(--prysm-card) 100%
+  );
   transform: scale(1.01);
 }
 
 .faq-item.active {
   transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(212, 255, 128, 0.1);
+  box-shadow: 0 8px 24px var(--shadow-lime);
 }
 
 .faq-answer {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-              padding 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.4s ease-in-out;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease-in-out;
   padding-top: 0;
   opacity: 0;
 }
@@ -172,21 +307,107 @@ section {
 
 /* Drawing Canvas Animation */
 .drawing-canvas {
-  background: rgba(255, 255, 255, 0.03);
-  border: 2px dashed rgba(212, 255, 128, 0.2);
+  background: var(--bg-overlay);
+  border: 2px dashed var(--border-hover);
   position: relative;
   overflow: hidden;
 }
 
+@media (min-width: 640px) {
+  .drawing-canvas {
+    border-width: 2px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drawing-canvas {
+    border-width: 2px;
+  }
+}
+
+/* Canvas Interactive Trailing Effect */
+.canvas-interactive {
+  cursor: crosshair;
+  position: relative;
+  touch-action: none;
+}
+
+.canvas-trail {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--lime);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: trailFade 0.6s ease-out forwards;
+  z-index: 3;
+  box-shadow: 0 0 8px var(--shadow-lime), 0 0 12px var(--shadow-lime);
+}
+
+@media (min-width: 640px) {
+  .canvas-trail {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .canvas-trail {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+}
+
+/* Touch support for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .canvas-interactive {
+    cursor: crosshair;
+  }
+
+  .canvas-trail {
+    width: 4px;
+    height: 4px;
+  }
+}
+
 .sketch-line {
   position: absolute;
-  height: 3px;
+  height: 2px;
   background: var(--lime);
   border-radius: 10px;
   transform: rotate(-15deg);
   animation: draw 3s infinite alternate;
-  box-shadow: 0 0 10px rgba(212, 255, 128, 0.5);
+  box-shadow: 0 0 8px var(--shadow-lime);
   width: 0;
+  --sketch-width: 80px;
+}
+
+@media (min-width: 640px) {
+  .sketch-line {
+    height: 2.5px;
+    box-shadow: 0 0 10px var(--shadow-lime);
+    --sketch-width: 100px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sketch-line {
+    height: 3px;
+    box-shadow: 0 0 12px var(--shadow-lime);
+    --sketch-width: 150px;
+  }
 }
 
 @keyframes draw {
@@ -198,17 +419,21 @@ section {
     opacity: 1;
   }
   100% {
-    width: 150px;
+    width: var(--sketch-width, 80px);
     opacity: 1;
   }
 }
 
 /* Enhanced hover effects for interactive elements */
-button, a, .cursor-pointer {
+button,
+a,
+.cursor-pointer {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button:hover, a:hover, .cursor-pointer:hover {
+button:hover,
+a:hover,
+.cursor-pointer:hover {
   transform: translateY(-1px);
 }
 
@@ -239,7 +464,8 @@ button:hover, a:hover, .cursor-pointer:hover {
 
 /* Smooth gradient animations */
 @keyframes gradientShift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -268,7 +494,31 @@ select {
   padding-right: 2.5rem;
 }
 
+[data-theme="light"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a8d85c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
 select option {
-  background-color: #1d163d;
-  color: white;
+  background-color: var(--select-bg);
+  color: var(--select-text);
+}
+
+/* Font display optimization - Font Awesome override */
+/* This ensures Font Awesome fonts use swap to prevent layout shift */
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap !important;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2")
+    format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap !important;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2")
+    format("woff2");
 }

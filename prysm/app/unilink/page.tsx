@@ -28,7 +28,7 @@ export default function UniLinkPage() {
           <div className="relative order-2 lg:order-1">
             <Card className="p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute -inset-4 bg-blue-400/10 blur-2xl rounded-full"></div>
-              <div className="relative bg-[#120d2b] rounded-2xl p-6 border border-white/5">
+              <div className="relative bg-[var(--prysm-bg)] rounded-2xl p-6 border border-[var(--border-color)]">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -40,38 +40,38 @@ export default function UniLinkPage() {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/5">
+                  <div className="bg-[var(--bg-overlay)] rounded-xl p-4 border border-[var(--border-color)]">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-10 h-10 rounded-lg bg-blue-400/20 flex items-center justify-center">
                         <i className="fa-solid fa-graduation-cap text-blue-400 text-sm"></i>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-400">Recommended University</p>
-                        <p className="text-sm font-bold text-white">University of Cape Town</p>
+                        <p className="text-xs text-[var(--text-secondary)]">Recommended University</p>
+                        <p className="text-sm font-bold text-[var(--text-primary)]">University of Cape Town</p>
                       </div>
                     </div>
                     <div className="space-y-2 mb-3">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-400">Match Score</span>
+                        <span className="text-[var(--text-secondary)]">Match Score</span>
                         <span className="text-blue-400 font-bold">94%</span>
                       </div>
-                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-2 bg-[var(--bg-overlay)] rounded-full overflow-hidden">
                         <div className="h-full bg-blue-400/30 rounded-full" style={{ width: '94%' }}></div>
                       </div>
                     </div>
                     <div className="bg-blue-400/10 rounded-lg p-3">
-                      <p className="text-xs text-gray-400 mb-1">Based on your results:</p>
-                      <p className="text-xs text-white font-semibold">BSc Computer Science</p>
+                      <p className="text-xs text-[var(--text-secondary)] mb-1">Based on your results:</p>
+                      <p className="text-xs text-[var(--text-primary)] font-semibold">BSc Computer Science</p>
                     </div>
                   </div>
                   <div className="bg-blue-400/10 rounded-xl p-4 border border-blue-400/20">
                     <p className="text-xs font-bold text-blue-400 uppercase mb-2">Application Status</p>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-gray-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
                         <i className="fa-solid fa-check-circle text-blue-400"></i>
                         <span>Requirements matched</span>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-300">
+                      <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
                         <i className="fa-solid fa-clock text-blue-400"></i>
                         <span>Application ready to submit</span>
                       </div>
@@ -86,9 +86,9 @@ export default function UniLinkPage() {
               Future Phase
             </Badge>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6">
-              Uni-Link: <span className="bg-gradient-to-r from-[#d4ff80] to-[#e0d7ff] bg-clip-text text-transparent">Your Path to University</span>
+              Uni-Link: <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">Your Path to University</span>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-400 mb-8 sm:mb-10">
+            <p className="text-lg sm:text-xl text-[var(--text-secondary)] mb-8 sm:mb-10">
               Centralized university applications across SADC and beyond. We match your results to degree requirements and streamline your application process, all from the Prysm web and mobile platforms.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -106,7 +106,7 @@ export default function UniLinkPage() {
                 <i className="fa-solid fa-search text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Smart Matching</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Our AI analyzes your academic results and matches you with universities and programs that align with your performance, interests, and career goals across SADC and international institutions.
               </p>
             </Card>
@@ -118,7 +118,7 @@ export default function UniLinkPage() {
                 <i className="fa-solid fa-file-alt text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Streamlined Applications</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Apply to multiple universities from one platform. Auto-fill application forms, track deadlines, and manage all your university applications in one place.
               </p>
             </Card>
@@ -130,7 +130,7 @@ export default function UniLinkPage() {
                 <i className="fa-solid fa-mobile-screen-button text-blue-400 text-2xl sm:text-3xl feature-icon"></i>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Access Anywhere</h3>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed">
                 Manage your university applications from the Prysm web app or mobile app. Get notifications about deadlines, application status updates, and important reminders.
               </p>
             </Card>
