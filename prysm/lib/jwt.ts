@@ -30,7 +30,13 @@ export async function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): P
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
-    return payload as JWTPayload;
+    // Cast through unknown first to avoid type conflict between jose's JWTPayload and our custom type
+    const customPayload = payload as unknown as JWTPayload;
+    // Validate required properties exist
+    if (customPayload.uid && customPayload.email) {
+      return customPayload;
+    }
+    return null;
   } catch (error) {
     console.error('JWT verification failed:', error);
     return null;

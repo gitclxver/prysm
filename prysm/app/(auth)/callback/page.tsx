@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Card } from '@/components/Card';
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signInWithEmailLink, isPasswordlessLink } = useAuth();
@@ -108,6 +108,32 @@ export default function AuthCallbackPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center px-6 py-12">
+        <Card className="max-w-md w-full">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-gradient-to-br from-[var(--lime)] to-[var(--lime)]/80 rounded-lg flex items-center justify-center shadow-lg shadow-[var(--shadow-lime)]">
+                <span className="text-[var(--prysm-bg)] text-sm font-black">P</span>
+              </div>
+              <span className="font-extrabold tracking-tight text-[var(--text-primary)] uppercase text-2xl">
+                Prysm
+              </span>
+            </div>
+            <div className="w-16 h-16 border-4 border-[var(--lime)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h1 className="text-2xl font-extrabold mb-2">Loading...</h1>
+            <p className="text-[var(--text-secondary)]">Verifying your email link...</p>
+          </div>
+        </Card>
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
 

@@ -34,10 +34,6 @@ const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
   'auth/popup-blocked': 'Popup was blocked. Please allow popups for this site and try again.',
   'auth/cancelled-popup-request': '',
   
-  // Connection/Network errors
-  'auth/network-request-failed': 'Unable to connect. Please check your internet connection.',
-  'auth/too-many-requests': 'Too many requests. Please wait a moment and try again.',
-  
   // Email errors
   'auth/invalid-action-code': 'This link has expired or is invalid. Please request a new one.',
   'auth/expired-action-code': 'This link has expired. Please request a new verification email.',

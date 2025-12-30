@@ -81,13 +81,15 @@ export default function HomePage() {
       let clientX: number;
       let clientY: number;
       
-      if ("touches" in e && e.touches && e.touches.length > 0) {
+      // Type guard for TouchEvent - check if touches exists and has length property
+      if ("touches" in e && e.touches && typeof (e.touches as any).length === "number" && (e.touches as any).length > 0) {
         // TouchEvent - access touches array
-        const touch = (e as { touches: TouchList }).touches[0];
+        const touchList = e.touches as { length: number; [index: number]: { clientX: number; clientY: number } };
+        const touch = touchList[0];
         clientX = touch?.clientX ?? 0;
         clientY = touch?.clientY ?? 0;
-      } else if ("clientX" in e) {
-        // MouseEvent
+      } else if ("clientX" in e && "clientY" in e) {
+        // MouseEvent - access clientX/clientY directly
         clientX = (e as { clientX: number }).clientX;
         clientY = (e as { clientY: number }).clientY;
       } else {

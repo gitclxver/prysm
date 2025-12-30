@@ -8,11 +8,13 @@ interface AnimatedCardProps {
   className?: string;
   hover?: boolean;
   delay?: number;
+  id?: string;
 }
 
-export function AnimatedCard({ children, className = '', hover = true, delay = 0 }: AnimatedCardProps) {
+export function AnimatedCard({ children, className = '', hover = true, delay = 0, id }: AnimatedCardProps) {
   return (
     <motion.div
+      id={id}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
