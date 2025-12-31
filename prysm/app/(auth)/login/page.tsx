@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -28,6 +28,26 @@ export default function LoginPage() {
   const { signIn, signUp, signInWithGoogle, sendPasswordlessLink, user } =
     useAuth();
   const router = useRouter();
+
+  // Auto-dismiss error messages after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Auto-dismiss success messages after 8 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   // Redirect if already logged in
   if (user) {
@@ -81,7 +101,7 @@ export default function LoginPage() {
         }
         await sendPasswordlessLink(email, isSignUp ? displayName : undefined);
         setSuccess(
-          `We've sent a sign-in link to ${email}. Please check your inbox and click the link to continue.`
+          `Email sent to ${email}. Check inbox to finish ${isSignUp ? 'sign up' : 'sign in'}.`
         );
         setLoading(false);
         return;

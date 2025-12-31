@@ -29,8 +29,9 @@ function AuthCallbackContent() {
           return;
         }
 
-        // Get the full URL including the query parameters
-        const fullUrl = window.location.href;
+        // Get the link from query params (passed by handler route) or use current URL
+        const linkFromParams = searchParams.get('link');
+        const fullUrl = linkFromParams || window.location.href;
         
         // Check if this is a passwordless link
         if (!isPasswordlessLink(fullUrl)) {
@@ -49,10 +50,13 @@ function AuthCallbackContent() {
         setTimeout(() => {
           router.push('/dashboard');
         }, 2000);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Auth callback error:', error);
         setStatus('error');
-        setMessage(error.message || 'An error occurred while signing in. Please try again.');
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : 'An error occurred while signing in. Please try again.';
+        setMessage(errorMessage);
       }
     };
 

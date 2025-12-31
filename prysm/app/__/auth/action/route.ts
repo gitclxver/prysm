@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Firebase Auth Handler Route
+ * Firebase Auth Action Route
  * 
  * This route handles Firebase email link authentication callbacks.
- * Firebase redirects to /__/auth/handler with authentication parameters,
+ * Firebase redirects to /__/auth/action with authentication parameters,
  * and this route forwards them to our callback page.
  */
 export async function GET(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         if (emailFromContinue) {
           finalEmail = decodeURIComponent(emailFromContinue);
         }
-      } catch {
+      } catch (e) {
         // If continueUrl parsing fails, continue without it
       }
     }
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     // Redirect to callback page
     return NextResponse.redirect(callbackUrl);
   } catch (error) {
-    console.error('Auth handler error:', error);
+    console.error('Auth action error:', error);
     // Fallback: redirect to login page
     return NextResponse.redirect(new URL('/login', request.url));
   }

@@ -12,6 +12,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Helper function to ensure URL has a protocol
+function getSiteUrl(): string {
+  const url = process.env.NEXT_PUBLIC_SITE_URL || 'https://prysmlearn.com';
+  // If URL doesn't start with http:// or https://, add https://
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    return `https://${url}`;
+  }
+  return url;
+}
+
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
   title: {
     default: "Prysm | Save the Semester. Escape the Prysm.",
@@ -27,11 +39,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://prysmlearn.com'),
+  metadataBase: new URL(siteUrl),
   openGraph: {
     title: "Prysm | Save the Semester. Escape the Prysm.",
     description: "The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Save your semester with AI-powered tools designed for SADC students.",
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://prysmlearn.com',
+    url: siteUrl,
     siteName: "Prysm",
     locale: "en_US",
     type: "website",
@@ -131,9 +143,9 @@ export default function RootLayout({
               "@type": "EducationalOrganization",
               "name": "Prysm",
               "description": "The Ultimate Student OS. Centralize your notes, exam papers, and schedule for SADC students.",
-              "url": process.env.NEXT_PUBLIC_SITE_URL || "https://prysmlearn.com",
-              "logo": `${process.env.NEXT_PUBLIC_SITE_URL || "https://prysmlearn.com"}/logo.png`,
-              "foundingDate": "2024",
+              "url": siteUrl,
+              "logo": `${siteUrl}/logo.png`,
+              "foundingDate": "2025",
               "contactPoint": {
                 "@type": "ContactPoint",
                 "email": "support@prysmlearn.com",
