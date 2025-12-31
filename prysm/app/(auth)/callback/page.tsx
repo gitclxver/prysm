@@ -4,17 +4,29 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Card } from '@/components/Card';
+import { auth } from '@/lib/firebase/config';
+import { isSignInWithEmailLink, signInWithEmailLink as firebaseSignInWithEmailLink } from 'firebase/auth';
 
 function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signInWithEmailLink, isPasswordlessLink } = useAuth();
+  const { refreshUserProfile } = useAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Verifying your email link...');
 
   useEffect(() => {
     const handleAuth = async () => {
       try {
+        // Get the full current URL
+        const fullUrl = window.location.href;
+        
+        // Check if this is a passwordless link using Firebase's built-in function
+        if (!isSignInWithEmailLink(auth, fullUrl)) {
+          setStatus('error');
+          setMessage('Invalid or expired link. Please request a new sign-in link.');
+          return;
+        }
+
         // Get email from URL params or localStorage
         const emailFromUrl = searchParams.get('email');
         const emailFromStorage = typeof window !== 'undefined' 
@@ -29,19 +41,16 @@ function AuthCallbackContent() {
           return;
         }
 
-        // Get the link from query params (passed by handler route) or use current URL
-        const linkFromParams = searchParams.get('link');
-        const fullUrl = linkFromParams || window.location.href;
+        // Sign in with the email link using Firebase's built-in function
+        await firebaseSignInWithEmailLink(auth, email, fullUrl);
         
-        // Check if this is a passwordless link
-        if (!isPasswordlessLink(fullUrl)) {
-          setStatus('error');
-          setMessage('Invalid or expired link. Please request a new sign-in link.');
-          return;
+        // Clear stored email
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('emailForSignIn');
         }
 
-        // Sign in with the email link
-        await signInWithEmailLink(email, fullUrl);
+        // Refresh user profile
+        await refreshUserProfile();
         
         setStatus('success');
         setMessage('Successfully signed in! Redirecting to dashboard...');
@@ -61,7 +70,7 @@ function AuthCallbackContent() {
     };
 
     handleAuth();
-  }, [searchParams, signInWithEmailLink, isPasswordlessLink, router]);
+  }, [searchParams, refreshUserProfile, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">

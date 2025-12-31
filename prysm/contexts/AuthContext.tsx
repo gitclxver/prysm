@@ -246,7 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       )}${
         displayName ? `&displayName=${encodeURIComponent(displayName)}` : ""
       }`,
-      handleCodeInApp: true,
+      handleCodeInApp: false, // Set to false so Firebase redirects directly to our callback URL
     };
 
     await sendSignInLinkToEmail(auth, email, actionCodeSettings);

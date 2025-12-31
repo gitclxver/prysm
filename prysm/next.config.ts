@@ -19,6 +19,20 @@ const nextConfig: NextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
+  async rewrites() {
+    // Forward Firebase auth handler requests to Firebase's default handler
+    // This is needed because Firebase email links and OAuth callbacks use /__/auth/* routes
+    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+    if (projectId) {
+      return [
+        {
+          source: '/__/auth/:path*',
+          destination: `https://${projectId}.firebaseapp.com/__/auth/:path*`,
+        },
+      ];
+    }
+    return [];
+  },
 };
 
 export default nextConfig;
