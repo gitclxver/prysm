@@ -70,8 +70,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Load user profile from Firestore
         const profile = await getUserProfile(firebaseUser.uid);
         setUserProfile(profile);
+        
+        // Refresh JWT token with sliding expiration (30 days from now)
+        // This resets the expiration timer every time the user visits
+        try {
+          const token = await generateToken({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email || '',
+          });
+          
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('auth_token', token);
+          }
+        } catch (error) {
+          console.error('Failed to refresh token:', error);
+        }
       } else {
         setUserProfile(null);
+        // Clear token when user signs out
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
       }
 
       setLoading(false);
@@ -240,16 +259,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const sendPasswordlessLink = async (email: string, displayName?: string) => {
-    const actionCodeSettings = {
-      url: `${window.location.origin}/auth/callback?email=${encodeURIComponent(
-        email
-      )}${
-        displayName ? `&displayName=${encodeURIComponent(displayName)}` : ""
-      }`,
-      handleCodeInApp: false, // Set to false so Firebase redirects directly to our callback URL
-    };
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/d94ad755-3914-4983-a8a3-bbf08c5f5e98',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:242',message:'sendPasswordlessLink called',data:{email,hasDisplayName:!!displayName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    try {
+      // Construct callback URL - Firebase requires absolute URL
+      const baseUrl = window.location.origin;
+      const callbackUrl = `${baseUrl}/auth/callback?email=${encodeURIComponent(email)}`;
+      
+      // Build actionCodeSettings - Firebase validates the URL format
+      const actionCodeSettings = {
+        url: callbackUrl,
+        handleCodeInApp: true, // Must be true for email link authentication to work
+      };
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/d94ad755-3914-4983-a8a3-bbf08c5f5e98',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:271',message:'Before sendSignInLinkToEmail',data:{callbackUrl,baseUrl,hasDisplayName:!!displayName,actionCodeSettings:JSON.stringify(actionCodeSettings)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
 
-    await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/d94ad755-3914-4983-a8a3-bbf08c5f5e98',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:253',message:'sendSignInLinkToEmail succeeded',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+    } catch (error) {
+      // #region agent log
+      const errorData = error instanceof Error ? {
+        message: error.message,
+        name: error.name,
+        code: (error as any)?.code,
+        serverResponse: (error as any)?.serverResponse,
+        errorInfo: (error as any)?.errorInfo,
+        customData: (error as any)?.customData,
+        stack: error.stack
+      } : { rawError: String(error) };
+      fetch('http://127.0.0.1:7243/ingest/d94ad755-3914-4983-a8a3-bbf08c5f5e98',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AuthContext.tsx:285',message:'sendSignInLinkToEmail error',data:errorData,timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      
+      // Provide user-friendly error message for quota exceeded
+      const errorCode = (error as any)?.code;
+      if (errorCode === 'auth/quota-exceeded' || errorCode === 400) {
+        const quotaError = new Error(
+          'We\'ve reached the daily limit for sending sign-in emails. Please try again tomorrow or contact support if you need immediate assistance.'
+        );
+        (quotaError as any).code = errorCode;
+        throw quotaError;
+      }
+      
+      throw error;
+    }
 
     // Store email and displayName in localStorage for when user clicks the link
     if (typeof window !== "undefined") {

@@ -1,7 +1,7 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+  process.env.JWT_SECRET
 );
 
 export interface JWTPayload {
@@ -14,11 +14,13 @@ export interface JWTPayload {
 /**
  * Generate a JWT token for a user session
  */
-export async function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): Promise<string> {
+export async function generateToken(
+  payload: Omit<JWTPayload, "iat" | "exp">
+): Promise<string> {
   const jwt = await new SignJWT({ uid: payload.uid, email: payload.email })
-    .setProtectedHeader({ alg: 'HS256' })
+    .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime('7d') // Token expires in 7 days
+    .setExpirationTime("30d") // Token expires in 30 days (sliding expiration - refreshed on each visit)
     .sign(secret);
 
   return jwt;
@@ -38,7 +40,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
     }
     return null;
   } catch (error) {
-    console.error('JWT verification failed:', error);
+    console.error("JWT verification failed:", error);
     return null;
   }
 }
@@ -47,10 +49,9 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
  * Get token from request headers
  */
 export function getTokenFromRequest(request: Request): string | null {
-  const authHeader = request.headers.get('authorization');
-  if (authHeader && authHeader.startsWith('Bearer ')) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader && authHeader.startsWith("Bearer ")) {
     return authHeader.substring(7);
   }
   return null;
 }
-

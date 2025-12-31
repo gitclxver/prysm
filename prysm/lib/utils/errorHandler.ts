@@ -25,6 +25,7 @@ const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
   'auth/invalid-verification-id': 'Invalid verification. Please request a new code.',
   'auth/code-expired': 'Verification code has expired. Please request a new one.',
   'auth/too-many-requests': 'Too many attempts. Please try again later.',
+  'auth/quota-exceeded': 'We\'ve reached the daily limit for sending sign-in emails. Please try again tomorrow or contact support if you need immediate assistance.',
   'auth/network-request-failed': 'Network error. Please check your connection and try again.',
   'auth/internal-error': 'An internal error occurred. Please try again.',
   'auth/invalid-api-key': 'Service configuration error. Please contact support.',
@@ -100,6 +101,14 @@ export function sanitizeError(error: unknown): string {
       return '';
     }
     
+    // Check for quota exceeded errors (Firebase email sign-in limit) - handle before generic error mapping
+    if (errorCode === 'auth/quota-exceeded' || errorCode === 400) {
+      const errorMessage = error.message || '';
+      if (errorMessage.includes('QUOTA_EXCEEDED') || errorMessage.includes('quota') || errorMessage.includes('Exceeded daily quota')) {
+        return 'We\'ve reached the daily limit for sending sign-in emails. Please try again tomorrow or contact support if you need immediate assistance.';
+      }
+    }
+    
     // Check if we have a user-friendly message for this error code
     if (errorCode && FIREBASE_ERROR_MESSAGES[errorCode]) {
       const message = FIREBASE_ERROR_MESSAGES[errorCode];
@@ -125,6 +134,14 @@ export function sanitizeError(error: unknown): string {
   // Handle Firebase error objects
   if (typeof error === 'object' && error !== null) {
     const firebaseError = error as FirebaseError;
+    
+    // Check for quota exceeded errors first
+    if (firebaseError.code === 'auth/quota-exceeded' || firebaseError.code === '400') {
+      const errorMessage = firebaseError.message || '';
+      if (errorMessage.includes('QUOTA_EXCEEDED') || errorMessage.includes('quota') || errorMessage.includes('Exceeded daily quota')) {
+        return 'We\'ve reached the daily limit for sending sign-in emails. Please try again tomorrow or contact support if you need immediate assistance.';
+      }
+    }
     
     // Check for Firebase error code
     if (firebaseError.code && FIREBASE_ERROR_MESSAGES[firebaseError.code]) {
