@@ -168,4 +168,4 @@ Or deploy to platforms like Vercel, Netlify, or your preferred hosting service.
 
 ## License
 
-© 2025 Prysm Academy. All rights reserved.
+© 2025 Prysm Learn. All rights reserved.

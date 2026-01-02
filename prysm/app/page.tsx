@@ -215,14 +215,11 @@ export default function HomePage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative mt-8 lg:mt-0 overflow-hidden w-full max-w-2xl lg:max-w-none"
+            className="relative mt-8 lg:mt-0 w-full max-w-2xl lg:max-w-none"
           >
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="absolute -inset-4 sm:-inset-6 bg-[var(--lime)]/20 blur-3xl rounded-full pointer-events-none"
-            ></motion.div>
-            <Card className="relative p-4 sm:p-5 lg:p-6 overflow-hidden">
+            <div className="relative">
+              <div className="absolute -inset-4 sm:-inset-6 border-2 border-[var(--lime)]/20 rounded-2xl pointer-events-none"></div>
+              <Card className="relative p-4 sm:p-5 lg:p-6">
               <div className="bg-[var(--prysm-bg)] rounded-2xl p-5 sm:p-7 lg:p-10 border border-[var(--border-color)]">
                 <div className="flex items-center justify-between mb-5 sm:mb-6 gap-2">
                   <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
@@ -295,6 +292,7 @@ export default function HomePage() {
                 </div>
               </div>
             </Card>
+            </div>
           </motion.div>
         </div>
       </header>
@@ -1111,15 +1109,6 @@ export default function HomePage() {
               </p>
               <div className="flex gap-3 text-lg text-[var(--text-secondary)]">
                 <a
-                  href="https://facebook.com/prysmlearn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-[var(--bg-overlay)] flex items-center justify-center hover:bg-[var(--lime)]/10 hover:text-[var(--lime)] transition-all"
-                  aria-label="Facebook"
-                >
-                  <i className="fa-brands fa-facebook"></i>
-                </a>
-                <a
                   href="https://instagram.com/prysm_learn"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -1371,15 +1360,6 @@ export default function HomePage() {
                 students.
               </p>
               <div className="flex justify-center gap-3 text-lg text-[var(--text-secondary)]">
-                <a
-                  href="https://facebook.com/prysmlearn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-[var(--bg-overlay)] flex items-center justify-center hover:bg-[var(--lime)]/10 hover:text-[var(--lime)] transition-all"
-                  aria-label="Facebook"
-                >
-                  <i className="fa-brands fa-facebook"></i>
-                </a>
                 <a
                   href="https://instagram.com/prysm_learn"
                   target="_blank"

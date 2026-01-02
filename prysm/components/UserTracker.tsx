@@ -37,6 +37,9 @@ export function UserTracker() {
     return null;
   }
 
+  // Format number with leading zeros (001, 002, etc.)
+  const formattedNumber = String(displayNumber || userProfile.signupNumber).padStart(3, '0');
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -48,7 +51,7 @@ export function UserTracker() {
         <div className="flex items-center gap-2">
           <i className="fa-solid fa-crown"></i>
           <span className="font-mono font-bold">
-            {displayNumber}/200
+            {formattedNumber}/200
           </span>
           <span>Founders Badge</span>
         </div>

@@ -31,15 +31,27 @@ export const metadata: Metadata = {
   },
   description: "Prysm - The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Access 42,000+ past papers from NSSCO, CAPS, IEB, and EGCSE. AI-powered study tools launching February 2026.",
   keywords: ["Prysm", "Student OS", "SADC", "Education", "Exam Papers", "Study Tools", "AI Learning", "Student Platform", "Academic Tools", "NSSCO", "CAPS", "IEB", "EGCSE", "Namibia", "South Africa", "Eswatini"],
-  authors: [{ name: "Prysm Academy" }],
-  creator: "Prysm Academy",
-  publisher: "Prysm Academy",
+  authors: [{ name: "Prysm Learn" }],
+  creator: "Prysm Learn",
+  publisher: "Prysm Learn",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   metadataBase: new URL(siteUrl),
+  icons: {
+    icon: [
+      { url: '/logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+  },
+  manifest: '/manifest.json',
   openGraph: {
     title: "Prysm | Save the Semester. Escape the Prysm.",
     description: "The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Save your semester with AI-powered tools designed for SADC students.",
@@ -47,11 +59,20 @@ export const metadata: Metadata = {
     siteName: "Prysm",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: `${siteUrl}/logo.png`,
+        width: 1200,
+        height: 630,
+        alt: "Prysm - The Ultimate Student OS",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Prysm | Save the Semester. Escape the Prysm.",
     description: "The Ultimate Student OS. Centralize your notes, exam papers, and schedule.",
+    images: [`${siteUrl}/logo.png`],
   },
   robots: {
     index: true,
@@ -104,6 +125,15 @@ export default function RootLayout({
             `,
           }}
         />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#d4ff80" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Prysm" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />

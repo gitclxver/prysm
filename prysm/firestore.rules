@@ -23,10 +23,42 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email;
       
       // Users can update their own profile
+      // Allow partial updates - if uid is being updated, it must match userId
       allow update: if isOwner(userId)
-        && request.resource.data.uid == userId; // Prevent changing uid
+        && (!('uid' in request.resource.data) || request.resource.data.uid == userId)
+        && (!('email' in request.resource.data) || request.resource.data.email == request.auth.token.email);
       
-      // Users cannot delete their own profile (use admin SDK for this)
+      // Users can delete their own profile
+      allow delete: if isOwner(userId);
+    }
+    
+    // Schools collection - for school search and student count tracking
+    match /schools/{schoolId} {
+      // Anyone authenticated can read schools (for search)
+      allow read: if isAuthenticated();
+      
+      // Authenticated users can create schools (when adding new schools)
+      allow create: if isAuthenticated();
+      
+      // Authenticated users can update schools (for incrementing student count)
+      allow update: if isAuthenticated();
+      
+    // No one can delete schools (use admin SDK for this)
+    allow delete: if false;
+  }
+  
+  // Courses collection - for course/department search and student count tracking
+  match /courses/{courseId} {
+    // Anyone authenticated can read courses (for search)
+    allow read: if isAuthenticated();
+    
+    // Authenticated users can create courses (when adding new courses)
+    allow create: if isAuthenticated();
+    
+    // Authenticated users can update courses (for incrementing student count)
+    allow update: if isAuthenticated();
+    
+    // No one can delete courses (use admin SDK for this)
       allow delete: if false;
     }
     

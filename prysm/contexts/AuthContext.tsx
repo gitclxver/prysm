@@ -36,7 +36,9 @@ interface AuthContextType {
     password: string,
     displayName: string,
     username?: string,
-    privacyPolicyAccepted?: boolean
+    privacyPolicyAccepted?: boolean,
+    firstName?: string,
+    lastName?: string
   ) => Promise<void>;
   signInWithGoogle: (privacyPolicyAccepted?: boolean) => Promise<void>;
   signOut: () => Promise<void>;
@@ -46,6 +48,7 @@ interface AuthContextType {
   sendPasswordlessLink: (email: string, displayName?: string) => Promise<void>;
   signInWithEmailLink: (email: string, emailLink: string) => Promise<void>;
   isPasswordlessLink: (link: string) => boolean;
+  isProfileComplete: (profile: UserProfile | null) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -60,6 +63,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const profile = await getUserProfile(user.uid);
       setUserProfile(profile);
     }
+  };
+
+  const isProfileComplete = (profile: UserProfile | null): boolean => {
+    if (!profile) return false;
+    return !!(
+      profile.country &&
+      profile.region &&
+      profile.school &&
+      // For high school students: need grade or level and syllabus
+      // For tertiary students: need department (no syllabus required)
+      ((profile.isUniversityStudent && profile.department) || 
+       (!profile.isUniversityStudent && (profile.grade || profile.level) && profile.syllabus))
+    );
   };
 
   useEffect(() => {
@@ -123,7 +139,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string,
     displayName: string,
     username?: string,
-    privacyPolicyAccepted: boolean = false
+    privacyPolicyAccepted: boolean = false,
+    firstName?: string,
+    lastName?: string
   ) => {
     if (!privacyPolicyAccepted) {
       throw new Error(
@@ -157,7 +175,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isEarly,
       signupNumber,
       username,
-      privacyPolicyAccepted
+      privacyPolicyAccepted,
+      firstName,
+      lastName
     );
 
     // Generate JWT token
@@ -250,7 +270,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const sendVerificationEmail = async () => {
     if (user) {
-      await sendEmailVerification(user);
+      // Get the site URL for the continue URL
+      const siteUrl = typeof window !== 'undefined' 
+        ? window.location.origin 
+        : process.env.NEXT_PUBLIC_SITE_URL || 'https://prysmlearn.com';
+      
+      const continueUrl = `${siteUrl}/verify-email?verified=true`;
+      
+      await sendEmailVerification(user, {
+        url: continueUrl,
+        handleCodeInApp: false, // Open in browser, not in app
+      });
     }
   };
 
@@ -400,6 +430,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     sendPasswordlessLink,
     signInWithEmailLink,
     isPasswordlessLink,
+    isProfileComplete,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

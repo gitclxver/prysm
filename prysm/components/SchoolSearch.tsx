@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { searchSchools, createSchool, type School } from "@/lib/firebase/schools";
+import { searchSchools, createSchool, getRecommendedSchools, type School } from "@/lib/firebase/schools";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SchoolSearchProps {
@@ -12,6 +12,7 @@ interface SchoolSearchProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  type?: 'highschool' | 'tertiary'; // Filter by school type
 }
 
 export function SchoolSearch({
@@ -22,9 +23,11 @@ export function SchoolSearch({
   placeholder = "Search for your school...",
   required = false,
   className = "",
+  type,
 }: SchoolSearchProps) {
   const [searchTerm, setSearchTerm] = useState(value);
   const [suggestions, setSuggestions] = useState<School[]>([]);
+  const [recommendations, setRecommendations] = useState<School[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolId, setSelectedSchoolId] = useState<string | undefined>();
@@ -53,6 +56,37 @@ export function SchoolSearch({
     };
   }, []);
 
+  // Load recommendations when country/region/type changes (but no search term)
+  useEffect(() => {
+    if (!country) {
+      setRecommendations([]);
+      return;
+    }
+
+    // Only show recommendations if no search term or search term is very short
+    if (searchTerm.length >= 2) {
+      setRecommendations([]);
+      return;
+    }
+
+    const loadRecommendations = async () => {
+      try {
+        const recs = await getRecommendedSchools(
+          country as "Namibia" | "South Africa" | "Eswatini",
+          region,
+          type,
+          8 // Show 8 recommendations
+        );
+        setRecommendations(recs);
+      } catch (error) {
+        console.error("Error loading recommendations:", error);
+        setRecommendations([]);
+      }
+    };
+
+    loadRecommendations();
+  }, [country, region, type, searchTerm]);
+
   // Search for schools when search term changes
   useEffect(() => {
     if (searchTimeoutRef.current) {
@@ -70,7 +104,9 @@ export function SchoolSearch({
       try {
         const results = await searchSchools(
           searchTerm,
-          country as "Namibia" | "South Africa" | "Eswatini"
+          country as "Namibia" | "South Africa" | "Eswatini",
+          10,
+          type
         );
         setSuggestions(results);
         setShowSuggestions(results.length > 0);
@@ -87,7 +123,7 @@ export function SchoolSearch({
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchTerm, country]);
+  }, [searchTerm, country, type]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -126,7 +162,14 @@ export function SchoolSearch({
     }
   };
 
-  const canAddNew = searchTerm.trim().length >= 3 && !selectedSchoolId;
+  // Only show "add school" option when:
+  // 1. Search term is at least 3 characters
+  // 2. No school is currently selected (no selectedSchoolId)
+  // 3. Search has completed (not loading)
+  // 4. No suggestions are showing and no suggestions were found (school not found in database)
+  // 5. The search term doesn't match the current value (school is not already selected/displayed)
+  const isSchoolAlreadySelected = selectedSchoolId || (value && searchTerm.trim().toLowerCase() === value.toLowerCase());
+  const canAddNew = searchTerm.trim().length >= 3 && !isSchoolAlreadySelected && !loading && !showSuggestions && suggestions.length === 0;
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -165,6 +208,36 @@ export function SchoolSearch({
           </button>
         )}
       </div>
+
+      {/* Recommendations (shown when no search term) */}
+      {recommendations.length > 0 && searchTerm.length < 2 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3"
+        >
+          <p className="text-xs font-semibold text-[var(--text-secondary)] mb-2 uppercase tracking-wider">
+            Popular {type === 'tertiary' ? 'Institutions' : type === 'highschool' ? 'Schools' : 'Schools & Institutions'}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {recommendations.map((school) => (
+              <button
+                key={school.id}
+                type="button"
+                onClick={() => handleSelectSchool(school)}
+                className="px-3 py-2 text-sm bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-overlay-hover)] hover:border-[var(--lime)]/30 transition-all hover:scale-105"
+              >
+                {school.name}
+                {school.city && (
+                  <span className="text-xs text-[var(--text-secondary)] ml-1">
+                    • {school.city}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
       <AnimatePresence>
         {showSuggestions && suggestions.length > 0 && (

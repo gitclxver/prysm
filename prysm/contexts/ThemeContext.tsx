@@ -34,26 +34,20 @@ function resolveTheme(preference: ThemePreference | undefined): Theme {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { user, userProfile, refreshUserProfile } = useAuth();
   
-  // Store refreshUserProfile in a ref to avoid dependency issues (Bug 2 fix)
+  // Store refreshUserProfile in a ref to avoid dependency issues
   const refreshUserProfileRef = React.useRef(refreshUserProfile);
   useEffect(() => {
     refreshUserProfileRef.current = refreshUserProfile;
   }, [refreshUserProfile]);
   
-  // Get initial theme preference from userProfile, localStorage, or system
+  // Get initial theme preference - only use localStorage for initial state (not userProfile to avoid hydration issues)
   const getInitialThemePreference = (): ThemePreference => {
-    // Priority 1: userProfile.theme (if already loaded)
-    if (userProfile?.theme && (userProfile.theme === "light" || userProfile.theme === "dark" || userProfile.theme === "system")) {
-      return userProfile.theme;
-    }
-    // Priority 2: localStorage (for quick initialization)
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme") as ThemePreference | null;
       if (savedTheme && (savedTheme === "light" || savedTheme === "dark" || savedTheme === "system")) {
         return savedTheme;
       }
     }
-    // Priority 3: system (default)
     return "system";
   };
 
@@ -64,17 +58,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Use refs to track synchronization state and prevent infinite loops
   const isSyncingToProfileRef = React.useRef(false);
+  const isInitializedRef = React.useRef(false);
+  const lastProfileThemeRef = React.useRef<ThemePreference | null>(null);
   const lastSyncedThemeRef = React.useRef<ThemePreference | null>(null);
-  const userProfileThemeRef = React.useRef<ThemePreference | null>(null);
-
-  // Track userProfile.theme in a ref to detect changes
-  useEffect(() => {
-    if (userProfile?.theme && (userProfile.theme === "light" || userProfile.theme === "dark" || userProfile.theme === "system")) {
-      userProfileThemeRef.current = userProfile.theme;
-    } else {
-      userProfileThemeRef.current = null;
-    }
-  }, [userProfile?.theme]);
 
   // Apply theme to document and sync to localStorage
   useEffect(() => {
@@ -86,75 +72,101 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [theme, themePreference]);
 
-  // Update theme when userProfile loads or changes (Priority 1: userProfile.theme from database)
-  // This effect syncs FROM the database TO the local state
+  // Sync FROM userProfile to local state (initialization and external updates)
   useEffect(() => {
-    // Skip if we're currently syncing TO the profile (to avoid circular updates)
-    if (isSyncingToProfileRef.current) {
+    if (!user || !userProfile) {
+      // Reset initialization state when user logs out
+      if (!user) {
+        isInitializedRef.current = false;
+        lastProfileThemeRef.current = null;
+      }
       return;
     }
-
-    const profileTheme = userProfileThemeRef.current;
-    if (profileTheme && profileTheme !== themePreference) {
-      // Update lastSyncedTheme BEFORE state update to prevent sync-to effect from running
-      lastSyncedThemeRef.current = profileTheme;
+    
+    const profileTheme = userProfile.theme;
+    
+    // Validate profile theme
+    if (profileTheme && profileTheme !== "light" && profileTheme !== "dark" && profileTheme !== "system") {
+      return;
+    }
+    
+    // Skip if profile theme hasn't changed (using ref to avoid dependency on themePreference)
+    if (profileTheme === lastProfileThemeRef.current) {
+      return;
+    }
+    
+    // Update ref to track current profile theme
+    lastProfileThemeRef.current = profileTheme || null;
+    
+    // First initialization: load from profile if available
+    if (!isInitializedRef.current) {
+      // Use a function updater to get current themePreference without adding it to deps
+      setThemePreferenceState((current) => {
+        if (profileTheme && profileTheme !== current) {
+          lastSyncedThemeRef.current = profileTheme;
+          return profileTheme;
+        }
+        lastSyncedThemeRef.current = current;
+        return current;
+      });
+      isInitializedRef.current = true;
+      return;
+    }
+    
+    // After initialization: sync FROM profile only if:
+    // 1. We're not currently syncing TO profile
+    // 2. Profile theme is different from what we last synced (external update)
+    if (!isSyncingToProfileRef.current && profileTheme && profileTheme !== lastSyncedThemeRef.current) {
+      // This is an external update - sync from profile
       setThemePreferenceState(profileTheme);
+      lastSyncedThemeRef.current = profileTheme;
     }
-  }, [userProfile?.theme, themePreference]);
+  }, [userProfile?.theme, user]);
 
-  // Sync theme changes to userProfile if user is logged in
-  // This effect syncs FROM the local state TO the database
+  // Sync theme changes TO userProfile (user-initiated changes)
   useEffect(() => {
-    // Skip if we're syncing FROM profile (to avoid circular updates)
+    // Skip if not initialized yet
+    if (!isInitializedRef.current) return;
+    
+    // Skip if we're currently syncing TO the profile
     if (isSyncingToProfileRef.current) {
       return;
     }
 
-    // Skip if this is the same value we just synced (prevents re-syncing after refresh)
-    if (lastSyncedThemeRef.current === themePreference) {
+    // Skip if this matches what we last synced
+    if (themePreference === lastSyncedThemeRef.current) {
       return;
     }
 
     if (user && userProfile) {
       // Only sync if the profile theme is different from current preference
       if (userProfile.theme !== themePreference) {
-        // CRITICAL: Set flag and lastSyncedTheme BEFORE any async operations
-        // This must happen synchronously to prevent race conditions where:
-        // 1. refreshUserProfile() updates userProfile.theme
-        // 2. Sync-FROM effect runs before promise completes
-        // 3. Without the flag, sync-FROM would try to update themePreference again
-        const themeToSync = themePreference;
         isSyncingToProfileRef.current = true;
-        lastSyncedThemeRef.current = themeToSync;
-
-        // Update profile - use promise chain to ensure proper sequencing
+        const themeToSync = themePreference;
+        
         updateUserProfile(user.uid, { theme: themeToSync })
           .then(() => {
-            // Refresh userProfile to get updated data (using ref to avoid dependency)
-            // This will update userProfile.theme in AuthContext, which triggers a re-render
-            // The sync-FROM effect will run, but the flag is already set, so it returns early
+            // Update lastSyncedTheme BEFORE refreshing to prevent sync-from from triggering
+            lastSyncedThemeRef.current = themeToSync;
             return refreshUserProfileRef.current();
           })
           .then(() => {
-            // Reset flag after both operations complete
-            // Use setTimeout to ensure this happens after React has processed the userProfile update
-            // This prevents the sync-FROM effect from running again immediately after flag reset
+            // Reset flag after sync completes
             setTimeout(() => {
               isSyncingToProfileRef.current = false;
-            }, 0);
+            }, 50);
           })
           .catch((error) => {
             console.error("Error updating theme in profile:", error);
-            // Reset flag even on error
             isSyncingToProfileRef.current = false;
-            // Clear the last synced ref on error so we can retry
+            // On error, allow retry by clearing lastSyncedTheme if it matches
             if (lastSyncedThemeRef.current === themeToSync) {
-              lastSyncedThemeRef.current = null;
+              lastSyncedThemeRef.current = userProfile.theme || null;
             }
           });
       }
     }
-  }, [themePreference, user, userProfile?.theme]);
+  }, [themePreference, user, userProfile]);
 
   const toggleTheme = () => {
     // Toggle between light and dark (not system)

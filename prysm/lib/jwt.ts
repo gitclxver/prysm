@@ -1,8 +1,18 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET
-);
+// Get JWT secret from environment variable, use a default fallback if not set
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  process.env.NEXT_PUBLIC_JWT_SECRET ||
+  "default-secret-key-change-in-production";
+
+if (!JWT_SECRET || JWT_SECRET === "default-secret-key-change-in-production") {
+  console.warn(
+    "WARNING: JWT_SECRET is not set. Using default secret. This is not secure for production!"
+  );
+}
+
+const secret = new TextEncoder().encode(JWT_SECRET);
 
 export interface JWTPayload {
   uid: string;

@@ -4,6 +4,8 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
+  firstName?: string;
+  lastName?: string;
   username?: string;
   photoURL?: string;
   bio?: string;
@@ -28,6 +30,9 @@ export interface UserProfile {
   syllabus?: string; // NSSCO, CAPS, IEB, EGCSE, IGCSE (Cambridge), Cambridge International, IB, AS/A Levels, etc.
   university?: string; // For university students
   isUniversityStudent?: boolean;
+  department?: string; // Department for tertiary students (e.g., "Computer Science", "Engineering")
+  status?: "active" | "deleted"; // Account status
+  deletedAt?: Timestamp; // When the account was deleted (for 21-day recovery window)
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

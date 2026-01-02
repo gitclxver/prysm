@@ -15,7 +15,7 @@ interface MobileSidebarProps {
 }
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, signOut } = useAuth();
   const sidebarRef = useRef<HTMLElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const avatarUrl = getUserAvatarUrl(
@@ -175,10 +175,21 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     </Link>
                     <Link href="/profile" onClick={onClose}>
                       <Button variant="secondary" className="w-full">
-                        <i className="fa-solid fa-user mr-2"></i>
-                        Profile
+                        <i className="fa-solid fa-user-edit mr-2"></i>
+                        Edit Profile
                       </Button>
                     </Link>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        signOut();
+                        onClose();
+                      }}
+                      className="w-full"
+                    >
+                      <i className="fa-solid fa-sign-out-alt mr-2"></i>
+                      Sign Out
+                    </Button>
                   </>
                 ) : (
                   <Link href="/login" onClick={onClose}>

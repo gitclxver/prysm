@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface BadgeProps {
@@ -43,9 +43,18 @@ export function Badge({
   className = "",
 }: BadgeProps) {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure we only use theme-dependent classes after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Default to dark mode for SSR to match initial state
+  const displayTheme = mounted ? theme : 'dark';
 
   const getPurpleVariantClasses = () => {
-    if (theme === "light") {
+    if (displayTheme === "light") {
       return "bg-[var(--lavender)]/15 text-[var(--lavender)] border-2 border-[var(--lavender)]/30 hover:bg-[var(--lavender)]/20 hover:border-[var(--lavender)]/40";
     }
     return "bg-[var(--prysm-bg)] text-[var(--text-secondary)] border-2 border-[var(--border-color)] hover:bg-[var(--prysm-bg)]/90 hover:border-[var(--border-color)]/80";
@@ -63,6 +72,7 @@ export function Badge({
   return (
     <span
       className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${variants[variant]} ${className}`}
+      suppressHydrationWarning
     >
       {variant === "founders" && <FoundersIcon />}
       {children}

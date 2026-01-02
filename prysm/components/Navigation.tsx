@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
@@ -11,7 +12,10 @@ import { getUserAvatarUrl } from "@/lib/avatar";
 
 export function Navigation() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const { user, userProfile } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const { user, userProfile, signOut } = useAuth();
   const displayName = userProfile?.displayName || user?.displayName || user?.email || "User";
   const displayText = userProfile?.username || displayName;
   const avatarUrl = getUserAvatarUrl(
@@ -19,6 +23,33 @@ export function Navigation() {
     userProfile?.photoURL || user?.photoURL || null,
     32
   );
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
+
+  const handleSignOut = async () => {
+    setDropdownOpen(false);
+    await signOut();
+  };
+
+  const handleEditProfile = () => {
+    setDropdownOpen(false);
+    router.push("/profile");
+  };
 
   return (
     <nav
@@ -113,21 +144,58 @@ export function Navigation() {
               <Link href="/dashboard" className="hidden sm:block">
                 <Button variant="secondary">Dashboard</Button>
               </Link>
-              <Link
-                href="/profile"
-                className="flex items-center gap-2 sm:gap-3 group"
-              >
-                <motion.img
-                  src={avatarUrl}
-                  alt="Profile"
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[var(--lime)]/30"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ type: "spring", stiffness: 400 }}
-                />
-                <span className="hidden md:block font-semibold text-[var(--text-primary)] group-hover:text-[var(--lime)] transition-colors">
-                  {displayText}
-                </span>
-              </Link>
+              
+              {/* User Profile Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 sm:gap-3 group focus:outline-none"
+                  aria-label="User menu"
+                  aria-expanded={dropdownOpen}
+                >
+                  <motion.img
+                    src={avatarUrl}
+                    alt="Profile"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[var(--lime)]/30 group-hover:border-[var(--lime)]/60 transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  />
+                  <span className="hidden md:block font-semibold text-[var(--text-primary)] group-hover:text-[var(--lime)] transition-colors">
+                    {displayText}
+                  </span>
+                  <i className={`fa-solid fa-chevron-down text-xs text-[var(--text-tertiary)] transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}></i>
+                </button>
+
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-2 w-48 bg-[var(--prysm-card)] border border-[var(--border-color)] rounded-lg shadow-xl z-50 overflow-hidden"
+                    >
+                      <div className="py-1">
+                        <button
+                          onClick={handleEditProfile}
+                          className="w-full px-4 py-2 text-left text-sm text-[var(--text-primary)] hover:bg-[var(--bg-overlay)] transition-colors flex items-center gap-2"
+                        >
+                          <i className="fa-solid fa-user-edit w-4"></i>
+                          <span>Edit Profile</span>
+                        </button>
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-2"
+                        >
+                          <i className="fa-solid fa-sign-out-alt w-4"></i>
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <button
                 onClick={() => setMobileSidebarOpen(true)}
                 className="lg:hidden w-10 h-10 flex items-center justify-center text-[var(--text-primary)] hover:text-[var(--lime)] transition-colors"

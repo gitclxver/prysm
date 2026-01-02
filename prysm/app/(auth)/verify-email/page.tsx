@@ -1,61 +1,92 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
+import { auth } from "@/lib/firebase/config";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const { user, sendVerificationEmail, loading } = useAuth();
   const [emailSent, setEmailSent] = useState(false);
-  const [checking, setChecking] = useState(false);
+  const [resending, setResending] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
+      return;
     }
 
-    if (user?.emailVerified) {
+    // Check if user is coming from email verification link (Firebase handles verification automatically)
+    // Firebase redirects to continueUrl after verifying, so we check if email is now verified
+    const checkVerification = async () => {
+      if (user) {
+        // Reload user to check if email was just verified
+        await user.reload();
+        if (user.emailVerified) {
+          // Email was verified, redirect to dashboard
+          router.push("/dashboard");
+        }
+      }
+    };
+
+    // Check if coming from verification link (URL has verified=true param)
+    const isFromVerificationLink = searchParams.get('verified') === 'true';
+    
+    if (isFromVerificationLink) {
+      // User clicked verification link - check verification status
+      checkVerification();
+      // Also check after a short delay (in case Firebase is still processing)
+      const timeout = setTimeout(checkVerification, 1000);
+      return () => clearTimeout(timeout);
+    } else if (user?.emailVerified) {
+      // User is already verified, redirect to dashboard
       router.push("/dashboard");
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, searchParams]);
 
   const handleResendEmail = async () => {
     try {
+      setResending(true);
       await sendVerificationEmail();
       setEmailSent(true);
       setTimeout(() => setEmailSent(false), 5000);
     } catch (error) {
-      // Error is logged but not shown to user to avoid exposing stack
       console.error("Error sending verification email:", error);
-      // Could add a toast notification here if needed
+      // Show error to user
+      alert("Failed to send verification email. Please try again.");
+    } finally {
+      setResending(false);
     }
   };
 
-  const handleCheckVerification = async () => {
-    setChecking(true);
-    // Reload user to check verification status
-    await user?.reload();
-    if (user?.emailVerified) {
-      router.push("/dashboard");
+  // Send email automatically on page load if not already sent
+  useEffect(() => {
+    if (user && !user.emailVerified && !emailSent) {
+      // Auto-send verification email when page loads
+      sendVerificationEmail().catch((error) => {
+        console.error("Error sending verification email:", error);
+      });
+      setEmailSent(true); // Mark as sent to prevent multiple sends
     }
-    setChecking(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--prysm-bg)]">
         <div className="text-[var(--text-primary)]">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 relative bg-[var(--prysm-bg)]">
       {/* Back to Website Link */}
       <Link
         href="/"
@@ -127,7 +158,7 @@ export default function VerifyEmailPage() {
           <ol className="list-decimal list-inside space-y-1 text-sm text-[var(--text-secondary)]">
             <li>Check your email inbox</li>
             <li>Click the verification link in the email</li>
-            <li>Return here and click &quot;I&apos;ve verified&quot;</li>
+            <li>You&apos;ll be automatically redirected and verified</li>
           </ol>
         </div>
 
@@ -139,20 +170,22 @@ export default function VerifyEmailPage() {
 
         <div className="space-y-3">
           <Button
-            variant="primary"
-            className="w-full"
-            onClick={handleCheckVerification}
-            disabled={checking}
-          >
-            {checking ? "Checking..." : "I've Verified My Email"}
-          </Button>
-
-          <Button
             variant="secondary"
             className="w-full"
             onClick={handleResendEmail}
+            disabled={resending}
           >
-            Resend Verification Email
+            {resending ? (
+              <>
+                <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                Sending...
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-envelope mr-2"></i>
+                Resend Verification Email
+              </>
+            )}
           </Button>
         </div>
 
@@ -162,5 +195,20 @@ export default function VerifyEmailPage() {
         </p>
       </Card>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[var(--prysm-bg)]">
+        <Card className="max-w-md w-full text-center">
+          <div className="w-16 h-16 border-4 border-[var(--lime)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[var(--text-primary)]">Loading...</p>
+        </Card>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

@@ -113,7 +113,7 @@ export default function TermsPage() {
           <Card className="p-6 sm:p-8">
             <h2 className="text-xl sm:text-2xl font-extrabold mb-4">6. Intellectual Property</h2>
             <p className="text-[var(--text-secondary)] leading-relaxed mb-4">
-              The Service and its original content, features, and functionality are owned by Prysm Academy and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+              The Service and its original content, features, and functionality are owned by Prysm Learn and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
             </p>
             <p className="text-[var(--text-secondary)] leading-relaxed">
               Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent.
@@ -169,7 +169,7 @@ export default function TermsPage() {
           <Card className="p-6 sm:p-8">
             <h2 className="text-xl sm:text-2xl font-extrabold mb-4">10. Indemnification</h2>
             <p className="text-[var(--text-secondary)] leading-relaxed">
-              You agree to indemnify, defend, and hold harmless Prysm Academy and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from your use of the Service, violation of these Terms, or infringement of any rights of another.
+              You agree to indemnify, defend, and hold harmless Prysm Learn and its officers, directors, employees, and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising from your use of the Service, violation of these Terms, or infringement of any rights of another.
             </p>
           </Card>
 

@@ -15,7 +15,8 @@ export default function LoginPage() {
   const [usePasswordless, setUsePasswordless] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -25,6 +26,7 @@ export default function LoginPage() {
   const [pendingAction, setPendingAction] = useState<"email" | "google" | null>(
     null
   );
+  const [showPassword, setShowPassword] = useState(false);
   const { signIn, signUp, signInWithGoogle, sendPasswordlessLink, user } =
     useAuth();
   const router = useRouter();
@@ -57,10 +59,25 @@ export default function LoginPage() {
   }, [success]);
 
   // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
+
+  // Show loading state while checking auth
   if (user) {
-    router.push("/dashboard");
     return null;
   }
+
+  // Show privacy modal when switching to sign up
+  const handleSignUpClick = () => {
+    setIsSignUp(true);
+    if (!privacyAccepted) {
+      setPendingAction("email");
+      setShowPrivacyModal(true);
+    }
+  };
 
   const handleEmailAuth = async (e: FormEvent) => {
     e.preventDefault();
@@ -82,8 +99,13 @@ export default function LoginPage() {
       // Handle passwordless authentication (only if enabled)
       if (usePasswordless && enablePasswordlessAuth) {
         if (isSignUp) {
-          if (!displayName.trim()) {
-            setError("Full name is required");
+          if (!firstName.trim()) {
+            setError("First name is required");
+            setLoading(false);
+            return;
+          }
+          if (!lastName.trim()) {
+            setError("Last name is required");
             setLoading(false);
             return;
           }
@@ -106,7 +128,8 @@ export default function LoginPage() {
             return;
           }
         }
-        await sendPasswordlessLink(email, isSignUp ? displayName : undefined);
+        const fullDisplayName = isSignUp ? `${firstName.trim()} ${lastName.trim()}`.trim() : undefined;
+        await sendPasswordlessLink(email, fullDisplayName);
         setSuccess(
           `Email sent to ${email}. Check inbox to finish ${isSignUp ? 'sign up' : 'sign in'}.`
         );
@@ -116,8 +139,13 @@ export default function LoginPage() {
 
       // Handle traditional email/password authentication
       if (isSignUp) {
-        if (!displayName.trim()) {
-          setError("Full name is required");
+        if (!firstName.trim()) {
+          setError("First name is required");
+          setLoading(false);
+          return;
+        }
+        if (!lastName.trim()) {
+          setError("Last name is required");
           setLoading(false);
           return;
         }
@@ -139,14 +167,18 @@ export default function LoginPage() {
           setLoading(false);
           return;
         }
+        // Construct displayName from firstName and lastName
+        const fullDisplayName = `${firstName.trim()} ${lastName.trim()}`.trim();
         await signUp(
           email,
           password,
-          displayName,
+          fullDisplayName,
           username.trim(),
-          privacyAccepted
+          privacyAccepted,
+          firstName.trim(),
+          lastName.trim()
         );
-        router.push("/verify-email");
+        router.push("/complete-profile");
       } else {
         await signIn(email, password);
         router.push("/dashboard");
@@ -195,12 +227,8 @@ export default function LoginPage() {
   const handlePrivacyAccept = () => {
     setPrivacyAccepted(true);
     setShowPrivacyModal(false);
-
-    // If there was a pending action, execute it
-    if (pendingAction === "google") {
       setPendingAction(null);
-      executeGoogleSignIn();
-    }
+    // Don't auto-execute email signup, user needs to fill form and submit
   };
 
   const handlePrivacyDecline = () => {
@@ -284,26 +312,43 @@ export default function LoginPage() {
         <form onSubmit={handleEmailAuth} className="space-y-4 mb-6">
           {isSignUp && (
             <>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-semibold mb-2"
+                  >
+                    First Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+                    placeholder="First Name"
+                    required
+                    minLength={1}
+                  />
+                </div>
               <div>
                 <label
-                  htmlFor="displayName"
+                    htmlFor="lastName"
                   className="block text-sm font-semibold mb-2"
                 >
-                  Full Name <span className="text-red-400">*</span>
+                    Last Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  id="displayName"
+                    id="lastName"
                   type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                   className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
-                  placeholder="Enter Your Full Name"
+                    placeholder="Last Name"
                   required
-                  minLength={2}
+                    minLength={1}
                 />
-                <p className="text-xs text-[var(--text-tertiary)] mt-1">
-                  This will be displayed on your profile
-                </p>
+                </div>
               </div>
               <div>
                 <label
@@ -358,16 +403,26 @@ export default function LoginPage() {
               >
                 Password
               </label>
+              <div className="relative">
               <input
                 id="password"
-                type="password"
+                  type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+                  className="w-full px-4 py-3 pr-12 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
                 placeholder="Enter Your Password"
                 required
                 minLength={6}
               />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                </button>
+              </div>
             </div>
           )}
 
@@ -485,7 +540,7 @@ export default function LoginPage() {
             <>
               Don&apos;t have an account?{" "}
               <button
-                onClick={() => setIsSignUp(true)}
+                onClick={handleSignUpClick}
                 className="text-[var(--lime)] hover:underline font-semibold"
               >
                 Sign Up

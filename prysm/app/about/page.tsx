@@ -693,15 +693,6 @@ export default function AboutPage() {
             <h5 className="font-bold text-white mb-4">Connect</h5>
             <div className="flex gap-4 text-xl text-gray-400 mb-6">
               <a
-                href="https://facebook.com/prysmlearn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-lime-400/10 hover:text-lime-400 transition-all"
-                aria-label="Facebook"
-              >
-                <i className="fa-brands fa-facebook"></i>
-              </a>
-              <a
                 href="https://instagram.com/prysm_learn"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -745,7 +736,7 @@ export default function AboutPage() {
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-white/5 text-sm text-gray-500">
-          <p>© 2025 Prysm Academy. All rights reserved.</p>
+          <p>© 2025 Prysm Learn. All rights reserved.</p>
           <div className="flex gap-6">
             <Link
               href="/privacy"

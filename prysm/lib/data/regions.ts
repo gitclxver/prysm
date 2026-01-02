@@ -3,7 +3,7 @@ export const countryRegions: Record<string, string[]> = {
   'Namibia': [
     'Erongo',
     'Hardap',
-    '//Karas',
+    'Karas',
     'Kavango East',
     'Kavango West',
     'Khomas',

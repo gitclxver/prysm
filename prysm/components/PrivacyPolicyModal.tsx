@@ -46,6 +46,7 @@ export function PrivacyPolicyModal({
   };
 
   const canAccept = hasScrolled || scrollPosition > 100; // Allow accept after scrolling 100px or 80% through
+  const scrollProgress = scrollPosition > 100 ? 100 : (scrollPosition / 100) * 100;
 
   if (!isOpen) return null;
 
@@ -335,18 +336,25 @@ export function PrivacyPolicyModal({
 
               {/* Footer with Accept Button */}
               <div className="border-t border-[var(--border-color)] p-6 flex-shrink-0 bg-[var(--prysm-card)]">
+                {!canAccept && (
+                  <div className="mb-4 p-3 bg-[var(--lime)]/10 border border-[var(--lime)]/30 rounded-lg">
+                    <p className="text-sm text-[var(--text-primary)] font-semibold flex items-center gap-2">
+                      <i className="fa-solid fa-arrow-down text-[var(--lime)] animate-bounce"></i>
+                      <span>Please scroll down to read the full policy before accepting</span>
+                    </p>
+                  </div>
+                )}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="text-sm text-[var(--text-secondary)] text-center sm:text-left">
+                  <p className="text-sm text-[var(--text-secondary)] text-center sm:text-left flex-1">
                     {canAccept ? (
-                      <span className="text-[var(--lime)]">
-                        <i className="fa-solid fa-check-circle mr-2"></i>
-                        Please review the policy above, then click
-                        &quot;Accept&quot; to continue
+                      <span className="text-[var(--lime)] font-semibold flex items-center gap-2">
+                        <i className="fa-solid fa-check-circle"></i>
+                        <span>Thank you for reading! You can now accept the policy.</span>
                       </span>
                     ) : (
-                      <span>
-                        <i className="fa-solid fa-arrow-down mr-2"></i>
-                        Please scroll to read the full policy
+                      <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-arrow-down text-[var(--text-tertiary)]"></i>
+                        <span>Scroll down to read the complete policy</span>
                       </span>
                     )}
                   </p>
@@ -364,9 +372,13 @@ export function PrivacyPolicyModal({
                       variant="primary"
                       onClick={onAccept}
                       disabled={!canAccept}
-                      className="px-6"
+                      className={`px-6 transition-all duration-300 ${
+                        !canAccept 
+                          ? 'opacity-50 cursor-not-allowed grayscale' 
+                          : 'opacity-100 cursor-pointer'
+                      }`}
                     >
-                      <i className="fa-solid fa-check mr-2"></i>
+                      <i className={`fa-solid ${canAccept ? 'fa-check' : 'fa-lock'} mr-2`}></i>
                       Accept & Continue
                     </Button>
                   </div>

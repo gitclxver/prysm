@@ -67,6 +67,10 @@ html {
   -webkit-overflow-scrolling: touch;
   /* Prevent pull-to-refresh on mobile */
   overscroll-behavior-y: none;
+  scroll-padding-top: 100px;
+  /* Prevent extra scroll space on mobile */
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -90,7 +94,6 @@ body {
   overscroll-behavior-y: none;
   /* Prevent elastic scrolling on iOS */
   position: relative;
-  transition: background-color 0.3s ease, color 0.3s ease;
   /* Font metric overrides to prevent layout shift */
   font-size-adjust: 0.5;
   text-rendering: optimizeLegibility;
@@ -98,13 +101,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Prevent layout shifts on mobile */
   min-height: 100vh;
+  /* Prevent extra scroll space on mobile */
+  margin: 0;
+  padding: 0;
   min-height: -webkit-fill-available;
 }
 
-/* Smooth page transitions - optimized for performance */
-* {
-  transition: color 0.2s ease, background-color 0.2s ease,
-    border-color 0.2s ease;
+/* Prevent extra scroll space on mobile - lock scroll at footer */
+@media (max-width: 768px) {
+  html {
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
+  body {
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  #main-content {
+    position: relative;
+    min-height: 100vh;
+  }
+}
+
+/* Smooth theme transitions - optimized for performance */
+/* Use very short duration and only essential properties to avoid frame drops */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    transition: background-color 0.2s ease-out;
+  }
+
+  body {
+    transition: background-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  /* Lightweight transition on text elements only */
+  * {
+    transition: color 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  /* Exclude expensive elements and animated elements */
+  svg, img, video, canvas, iframe,
+  [class*="animate-"], [class*="motion-"],
+  .no-transition {
+    transition: none !important;
+  }
 }
 
 /* Optimize animations to use GPU */
@@ -171,11 +215,6 @@ body {
   overflow: visible;
   clip: auto;
   white-space: normal;
-}
-
-/* Enhanced scroll experience */
-html {
-  scroll-padding-top: 100px;
 }
 
 /* Subtle parallax effect for sections */
