@@ -58,11 +58,11 @@ function DashboardContent() {
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold">
                     Welcome back, {userProfile?.firstName || userProfile?.displayName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'User'}! 👋
                   </h1>
-                  {userProfile?.isEarlyUser && userProfile.signupNumber && (
+                  {userProfile && userProfile.isEarlyUser === true && userProfile.signupNumber && (
                     <UserTracker />
                   )}
                 </div>
-                {userProfile?.isEarlyUser && userProfile.signupNumber && (
+                {userProfile && userProfile.isEarlyUser === true && userProfile.signupNumber && (
                   <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                     <p className="text-[var(--text-secondary)] text-base sm:text-lg">
                       Founder: {String(userProfile.signupNumber).padStart(3, '0')}/200
@@ -109,7 +109,7 @@ function DashboardContent() {
             </AnimatePresence>
 
             {/* Thank You Message for Founders */}
-            {userProfile?.isEarlyUser && (
+            {userProfile && userProfile.isEarlyUser === true && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
