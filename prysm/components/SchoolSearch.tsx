@@ -31,12 +31,14 @@ export function SchoolSearch({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedSchoolId, setSelectedSchoolId] = useState<string | undefined>();
+  const [originalValue, setOriginalValue] = useState(value); // Track original value when user starts typing
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update search term when value prop changes
+  // Update search term and original value when value prop changes
   useEffect(() => {
     setSearchTerm(value);
+    setOriginalValue(value);
   }, [value]);
 
   // Close suggestions when clicking outside
@@ -87,12 +89,8 @@ export function SchoolSearch({
     loadRecommendations();
   }, [country, region, type, searchTerm]);
 
-  // Search for schools when search term changes
-  useEffect(() => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-
+  // Manual search function - only called when user explicitly searches
+  const performSearch = async () => {
     if (!country || searchTerm.length < 2) {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -100,42 +98,66 @@ export function SchoolSearch({
     }
 
     setLoading(true);
-    searchTimeoutRef.current = setTimeout(async () => {
-      try {
-        const results = await searchSchools(
-          searchTerm,
-          country as "Namibia" | "South Africa" | "Eswatini",
-          10,
-          type
-        );
-        setSuggestions(results);
-        setShowSuggestions(results.length > 0);
-      } catch (error) {
-        console.error("Error searching schools:", error);
-        setSuggestions([]);
-      } finally {
-        setLoading(false);
-      }
-    }, 300);
-
-    return () => {
-      if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
-      }
-    };
-  }, [searchTerm, country, type]);
+    try {
+      const results = await searchSchools(
+        searchTerm,
+        country as "Namibia" | "South Africa" | "Eswatini",
+        10,
+        type
+      );
+      setSuggestions(results);
+      setShowSuggestions(results.length > 0);
+    } catch (error) {
+      console.error("Error searching schools:", error);
+      setSuggestions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setSearchTerm(newValue);
-    onChange(newValue, undefined);
+    // Don't call onChange here - only update when school is selected
+    // This allows us to revert if user clicks away
     setSelectedSchoolId(undefined);
-    setShowSuggestions(true);
+    // Clear suggestions when typing (don't auto-search)
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+  const handleInputFocus = () => {
+    // Store the original value when user starts interacting
+    setOriginalValue(value);
+    if (suggestions.length > 0) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleInputBlur = () => {
+    // If user clicked away without selecting a school, revert to original value
+    if (!selectedSchoolId && searchTerm !== originalValue) {
+      setSearchTerm(originalValue);
+      // Don't call onChange here - we want to keep the original value
+    }
+    // Hide suggestions after a short delay to allow click events to fire
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 200);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Search when Enter is pressed
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      performSearch();
+    }
   };
 
   const handleSelectSchool = (school: School) => {
     setSearchTerm(school.name);
     setSelectedSchoolId(school.id);
+    setOriginalValue(school.name); // Update original value when school is selected
     onChange(school.name, school.id);
     setShowSuggestions(false);
   };
@@ -151,11 +173,13 @@ export function SchoolSearch({
         region
       );
       setSelectedSchoolId(newSchool.id);
+      setOriginalValue(newSchool.name); // Update original value when school is added
       onChange(newSchool.name, newSchool.id);
       setShowSuggestions(false);
     } catch (error) {
       console.error("Error creating school:", error);
       // Still allow user to continue with the school name
+      setOriginalValue(searchTerm.trim()); // Update original value
       onChange(searchTerm.trim());
     } finally {
       setLoading(false);
@@ -173,38 +197,52 @@ export function SchoolSearch({
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
-      <div className="relative">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleInputChange}
-          onFocus={() => {
-            if (suggestions.length > 0) {
-              setShowSuggestions(true);
-            }
-          }}
-          className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors pr-10"
-          placeholder={placeholder}
-          required={required}
-        />
-        {loading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <i className="fa-solid fa-spinner fa-spin text-[var(--text-tertiary)]"></i>
-          </div>
-        )}
-        {!loading && searchTerm && (
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+            className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors pr-10"
+            placeholder={placeholder}
+            required={required}
+          />
+          {!loading && searchTerm && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm("");
+                setOriginalValue("");
+                onChange("");
+                setSelectedSchoolId(undefined);
+                setShowSuggestions(false);
+                setSuggestions([]);
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
+              aria-label="Clear search"
+            >
+              <i className="fa-solid fa-times"></i>
+            </button>
+          )}
+        </div>
+        {searchTerm.length >= 2 && (
           <button
             type="button"
-            onClick={() => {
-              setSearchTerm("");
-              onChange("");
-              setSelectedSchoolId(undefined);
-              setShowSuggestions(false);
-            }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
-            aria-label="Clear search"
+            onClick={performSearch}
+            disabled={loading}
+            className="px-4 py-3 bg-[var(--lime)] text-[var(--prysm-bg)] font-semibold rounded-lg hover:bg-[var(--lime)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
-            <i className="fa-solid fa-times"></i>
+            {loading ? (
+              <i className="fa-solid fa-spinner fa-spin"></i>
+            ) : (
+              <>
+                <i className="fa-solid fa-search"></i>
+                <span className="hidden sm:inline">Search</span>
+              </>
+            )}
           </button>
         )}
       </div>
@@ -224,7 +262,10 @@ export function SchoolSearch({
               <button
                 key={school.id}
                 type="button"
-                onClick={() => handleSelectSchool(school)}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // Prevent input blur before click
+                  handleSelectSchool(school);
+                }}
                 className="px-3 py-2 text-sm bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] hover:bg-[var(--bg-overlay-hover)] hover:border-[var(--lime)]/30 transition-all hover:scale-105"
               >
                 {school.name}
@@ -253,7 +294,10 @@ export function SchoolSearch({
                 <button
                   key={school.id}
                   type="button"
-                  onClick={() => handleSelectSchool(school)}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevent input blur before click
+                    handleSelectSchool(school);
+                  }}
                   className="w-full text-left px-4 py-3 rounded-lg hover:bg-[var(--bg-overlay)] transition-colors group"
                 >
                   <div className="flex items-center justify-between">
@@ -307,7 +351,10 @@ export function SchoolSearch({
               </p>
               <button
                 type="button"
-                onClick={handleAddNewSchool}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // Prevent input blur before click
+                  handleAddNewSchool();
+                }}
                 disabled={loading}
                 className="text-xs px-3 py-1.5 bg-[var(--lime)] text-[var(--prysm-bg)] rounded-lg font-semibold hover:bg-[var(--lime)]/80 transition-colors disabled:opacity-50"
               >

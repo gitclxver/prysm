@@ -18,6 +18,8 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { motion, AnimatePresence } from "framer-motion";
 import { incrementSchoolStudentCount } from "@/lib/firebase/schools";
+import { sanitizeError } from "@/lib/utils/errorHandler";
+import { withFirebaseDelay } from "@/lib/utils/firebaseDelay";
 
 type Country = "Namibia" | "South Africa" | "Eswatini" | "";
 type StudentType = "highschool" | "tertiary" | "";
@@ -85,8 +87,8 @@ export default function CompleteProfilePage() {
       throw new Error("User not authenticated");
     }
 
-    await updateUserProfile(user.uid, stepData);
-    await refreshUserProfile();
+    await withFirebaseDelay(updateUserProfile(user.uid, stepData), 500);
+    await withFirebaseDelay(refreshUserProfile(), 500);
   };
 
   const handleNext = async () => {
@@ -169,20 +171,14 @@ export default function CompleteProfilePage() {
             level: level || undefined,
             syllabus: syllabus as any,
           });
-          // Refresh profile to ensure latest data is loaded
-          await refreshUserProfile();
-          // Small delay to ensure state updates
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          // Refresh profile to ensure latest data is loaded (delay handled in saveStep)
           // Profile is complete, redirect to dashboard with firstLogin flag
           router.push("/dashboard?firstLogin=true");
           return;
         } else if (studentType === "tertiary") {
           // Save department for tertiary (final step)
           await saveStep({ department: department || undefined });
-          // Refresh profile to ensure latest data is loaded
-          await refreshUserProfile();
-          // Small delay to ensure state updates
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          // Refresh profile to ensure latest data is loaded (delay handled in saveStep)
           // Profile is complete, redirect to dashboard with firstLogin flag
           router.push("/dashboard?firstLogin=true");
           return;
@@ -192,7 +188,12 @@ export default function CompleteProfilePage() {
       setLoading(false);
       setCurrentStep(currentStep + 1);
     } catch (err: any) {
-      setError(err.message || "Failed to save. Please try again.");
+      const friendlyError = sanitizeError(err);
+      if (friendlyError) {
+        setError(friendlyError);
+      } else {
+        setError('Failed to save. Please try again.');
+      }
       setLoading(false);
     }
   };
@@ -230,13 +231,13 @@ export default function CompleteProfilePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-[var(--prysm-bg)]">
-        <Card className="max-w-2xl w-full">
+      <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 md:py-12 bg-[var(--prysm-bg)]">
+        <Card className="max-w-2xl w-full p-4 sm:p-6 md:p-8">
           {/* Progress Indicator */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-3xl font-extrabold">Complete Your Profile</h1>
-              <span className="text-sm text-[var(--text-secondary)]">
+          <div className="mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-4">
+              <h1 className="text-2xl sm:text-3xl font-extrabold">Complete Your Profile</h1>
+              <span className="text-xs sm:text-sm text-[var(--text-secondary)]">
                 Step {currentStep} of {totalSteps}
               </span>
             </div>

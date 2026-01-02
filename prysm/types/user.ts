@@ -16,6 +16,7 @@ export interface UserProfile {
   };
   isEarlyUser: boolean;
   signupNumber?: number; // User's position in the first 200 (1-200)
+  nameEditCount?: number; // Number of times user has edited their name (max 3)
   // Privacy & Terms
   privacyPolicyAccepted?: boolean;
   privacyPolicyAcceptedAt?: Timestamp;

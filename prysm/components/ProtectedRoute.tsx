@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { motion } from 'framer-motion';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -37,8 +38,38 @@ export function ProtectedRoute({ children, requireCompleteProfile = false }: Pro
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#120d2b]">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[var(--prysm-bg)]">
+        <motion.img
+          src="/logo.png"
+          alt="Prysm Logo"
+          className="h-16 w-16 rounded-lg"
+          width="64"
+          height="64"
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [1, 0.7, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{ willChange: "transform" }}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+            const fallback = e.currentTarget
+              .nextElementSibling as HTMLElement;
+            if (fallback) fallback.style.display = "flex";
+          }}
+        />
+        <div
+          className="w-16 h-16 bg-gradient-to-br from-[var(--lime)] to-[var(--lime)]/80 rounded-lg flex items-center justify-center shadow-lg shadow-[var(--shadow-lime)]"
+          style={{ display: "none" }}
+        >
+          <span className="text-[var(--prysm-bg)] text-2xl font-black">
+            P
+          </span>
+        </div>
       </div>
     );
   }

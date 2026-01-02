@@ -25,6 +25,7 @@ import {
 import { generateToken } from "@/lib/jwt";
 import { getUserAvatarUrl } from "@/lib/avatar";
 import { UserProfile } from "@/types/user";
+import { withFirebaseDelay } from "@/lib/utils/firebaseDelay";
 
 interface AuthContextType {
   user: User | null;
@@ -116,10 +117,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
+    const userCredential = await withFirebaseDelay(
+      signInWithEmailAndPassword(auth, email, password),
+      500
     );
 
     // Generate JWT token
@@ -149,58 +149,126 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       );
     }
 
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    // Generate avatar URL
-    const photoURL = getUserAvatarUrl(displayName, undefined);
-
-    // Update Firebase Auth profile
-    await firebaseUpdateProfile(userCredential.user, { displayName, photoURL });
-
-    // Check if user is early user and get signup number
-    const { isEarly, signupNumber } = await checkAndMarkEarlyUser(
-      userCredential.user.uid
-    );
-
-    // Create user profile in Firestore
-    await createUserProfile(
-      userCredential.user.uid,
-      email,
-      displayName,
-      photoURL,
-      isEarly,
-      signupNumber,
-      username,
-      privacyPolicyAccepted,
-      firstName,
-      lastName
-    );
-
-    // Generate JWT token
-    const token = await generateToken({
-      uid: userCredential.user.uid,
-      email: email,
-    });
-
-    // Store token in localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem("auth_token", token);
+    // Ensure we're in a clean state before creating account
+    // Sign out any existing user to prevent conflicts
+    try {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        await firebaseSignOut(auth);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("auth_token");
+          localStorage.removeItem("emailForSignIn");
+          localStorage.removeItem("displayNameForSignIn");
+        }
+        // Small delay to ensure sign out completes
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    } catch (signOutError) {
+      // If sign out fails, continue anyway - might already be signed out
+      console.warn("Warning: Could not clear existing auth state:", signOutError);
     }
 
-    // Send verification email
-    await sendEmailVerification(userCredential.user);
+    try {
+      const userCredential = await withFirebaseDelay(
+        createUserWithEmailAndPassword(auth, email, password),
+        600
+      );
 
-    // Refresh profile
-    await refreshUserProfile();
+      // Generate avatar URL
+      const photoURL = getUserAvatarUrl(displayName, undefined);
+
+      // Update Firebase Auth profile
+      await withFirebaseDelay(
+        firebaseUpdateProfile(userCredential.user, { displayName, photoURL }),
+        500
+      );
+
+      // Check if user is early user and get signup number
+      const { isEarly, signupNumber } = await withFirebaseDelay(
+        checkAndMarkEarlyUser(userCredential.user.uid),
+        500
+      );
+
+      // Create user profile in Firestore
+      await withFirebaseDelay(
+        createUserProfile(
+          userCredential.user.uid,
+          email,
+          displayName,
+          photoURL,
+          isEarly,
+          signupNumber,
+          username,
+          privacyPolicyAccepted,
+          firstName,
+          lastName
+        ),
+        600
+      );
+
+      // Generate JWT token
+      const token = await generateToken({
+        uid: userCredential.user.uid,
+        email: email,
+      });
+
+      // Store token in localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("auth_token", token);
+      }
+
+      // Send verification email
+      await withFirebaseDelay(
+        sendEmailVerification(userCredential.user),
+        500
+      );
+
+      // Refresh profile
+      await withFirebaseDelay(refreshUserProfile(), 500);
+    } catch (error: any) {
+      // If account creation fails (e.g., email already in use), ensure we're signed out
+      // This prevents issues when trying to create another account on the same device
+      try {
+        await firebaseSignOut(auth);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("auth_token");
+          localStorage.removeItem("emailForSignIn");
+          localStorage.removeItem("displayNameForSignIn");
+        }
+      } catch (signOutError) {
+        // Ignore sign out errors, just ensure we tried to clear state
+        console.error("Error clearing auth state after signup failure:", signOutError);
+      }
+      // Re-throw the original error
+      throw error;
+    }
   };
 
   const signInWithGoogle = async (privacyPolicyAccepted: boolean = false) => {
+    // Ensure we're in a clean state before Google sign in/sign up
+    // Sign out any existing user to prevent conflicts
+    try {
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        await firebaseSignOut(auth);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("auth_token");
+          localStorage.removeItem("emailForSignIn");
+          localStorage.removeItem("displayNameForSignIn");
+        }
+        // Small delay to ensure sign out completes
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    } catch (signOutError) {
+      // If sign out fails, continue anyway - might already be signed out
+      console.warn("Warning: Could not clear existing auth state:", signOutError);
+    }
+
     const provider = new GoogleAuthProvider();
-    const userCredential = await signInWithPopup(auth, provider);
+    const userCredential = await withFirebaseDelay(
+      signInWithPopup(auth, provider),
+      600
+    );
 
     // Check if this is a new user
     const isNewUser =
@@ -254,15 +322,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Refresh profile
-    await refreshUserProfile();
+    await withFirebaseDelay(refreshUserProfile(), 500);
   };
 
   const signOut = async () => {
     await firebaseSignOut(auth);
 
-    // Remove JWT token
+    // Clear all authentication-related data from localStorage
     if (typeof window !== "undefined") {
       localStorage.removeItem("auth_token");
+      localStorage.removeItem("emailForSignIn");
+      localStorage.removeItem("displayNameForSignIn");
+      // Clear any other auth-related items that might persist
+      // Note: Firebase Auth's internal persistence is handled by firebaseSignOut above
     }
 
     setUserProfile(null);

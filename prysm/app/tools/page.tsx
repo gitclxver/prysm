@@ -101,14 +101,14 @@ export default function ToolsPage() {
             </Link>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.5} className="academy-card border-l-4 border-l-lime-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.5} className="academy-card border-l-4 border-l-lime-400 border-t border-r border-b border-white/5 p-8 rounded-2xl bg-[#1d163d] relative">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <Badge variant="purple" className="text-[10px] px-2 py-0.5 whitespace-nowrap">Phase 3</Badge>
+            </div>
             <div className="w-14 h-14 bg-lime-400/10 rounded-xl flex items-center justify-center text-lime-400 mb-6">
               <i className="fa-solid fa-user-graduate text-2xl feature-icon"></i>
             </div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-white">Prysm Tutors</h3>
-              <Badge variant="purple" className="text-xs">Phase 3</Badge>
-            </div>
+            <h3 className="text-xl font-bold text-white mb-4">Prysm Tutors</h3>
             <p className="text-sm text-gray-400 mb-6 leading-relaxed">
               Book 1-on-1 sessions with top-tier university students who mastered the exact curriculum you're studying. Get personalized help from tutors who understand your syllabus.
             </p>
@@ -118,27 +118,27 @@ export default function ToolsPage() {
             </Link>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.6} className="academy-card border-l-4 border-l-red-400 border-t border-r border-b border-white/5 p-8 opacity-75 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.6} className="academy-card border-l-4 border-l-red-400 border-t border-r border-b border-white/5 p-8 opacity-75 rounded-2xl bg-[#1d163d] relative">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <Badge variant="purple" className="text-[10px] px-2 py-0.5 whitespace-nowrap">Coming Soon</Badge>
+            </div>
             <div className="w-14 h-14 bg-red-400/10 rounded-xl flex items-center justify-center text-red-400 mb-6">
               <i className="fa-solid fa-fire text-2xl feature-icon"></i>
             </div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-white">Study Streaks & Progress</h3>
-              <Badge variant="purple" className="text-xs">Coming Soon</Badge>
-            </div>
+            <h3 className="text-xl font-bold text-white mb-4">Study Streaks & Progress</h3>
             <p className="text-sm text-gray-400 mb-6 leading-relaxed">
               Gamified focus with 24h streaks that auto-pause during holidays. Track your study progress and build consistent study habits.
             </p>
           </AnimatedCard>
 
-          <AnimatedCard delay={0.7} className="academy-card border-l-4 border-l-cyan-400 border-t border-r border-b border-white/5 p-8 opacity-75 rounded-2xl bg-[#1d163d]">
+          <AnimatedCard delay={0.7} className="academy-card border-l-4 border-l-cyan-400 border-t border-r border-b border-white/5 p-8 opacity-75 rounded-2xl bg-[#1d163d] relative">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <Badge variant="purple" className="text-[10px] px-2 py-0.5 whitespace-nowrap">Future Phase</Badge>
+            </div>
             <div className="w-14 h-14 bg-cyan-400/10 rounded-xl flex items-center justify-center text-cyan-400 mb-6">
               <i className="fa-solid fa-users text-2xl feature-icon"></i>
             </div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-white">Community Hub</h3>
-              <Badge variant="purple" className="text-xs">Future Phase</Badge>
-            </div>
+            <h3 className="text-xl font-bold text-white mb-4">Community Hub</h3>
             <p className="text-sm text-gray-400 mb-6 leading-relaxed">
               Connect with students, share exam papers, join study groups, and build a thriving learning ecosystem together.
             </p>

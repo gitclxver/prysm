@@ -26,10 +26,10 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: {
-    default: "Prysm | Save the Semester. Escape the Prysm.",
+    default: "Prysm",
     template: "%s | Prysm",
   },
-  description: "Prysm - The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Access 42,000+ past papers from NSSCO, CAPS, IEB, and EGCSE. AI-powered study tools launching February 2026.",
+  description: "Prysm - Save the Semester. Escape the Prysm. The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Access 42,000+ past papers from NSSCO, CAPS, IEB, and EGCSE. AI-powered study tools launching February 2026.",
   keywords: ["Prysm", "Student OS", "SADC", "Education", "Exam Papers", "Study Tools", "AI Learning", "Student Platform", "Academic Tools", "NSSCO", "CAPS", "IEB", "EGCSE", "Namibia", "South Africa", "Eswatini"],
   authors: [{ name: "Prysm Learn" }],
   creator: "Prysm Learn",
@@ -53,8 +53,8 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: "Prysm | Save the Semester. Escape the Prysm.",
-    description: "The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Save your semester with AI-powered tools designed for SADC students.",
+    title: "Prysm",
+    description: "Prysm - Save the Semester. Escape the Prysm. The Ultimate Student OS. Centralize your notes, exam papers, and schedule. Save your semester with AI-powered tools designed for SADC students.",
     url: siteUrl,
     siteName: "Prysm",
     locale: "en_US",
@@ -70,8 +70,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prysm | Save the Semester. Escape the Prysm.",
-    description: "The Ultimate Student OS. Centralize your notes, exam papers, and schedule.",
+    title: "Prysm",
+    description: "Prysm - Save the Semester. Escape the Prysm. The Ultimate Student OS. Centralize your notes, exam papers, and schedule.",
     images: [`${siteUrl}/logo.png`],
   },
   robots: {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Navigation } from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 function DashboardContent() {
   const { user, userProfile, signOut } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [showCongratulations, setShowCongratulations] = useState(false);
   const avatarUrl = getUserAvatarUrl(
     userProfile?.displayName || user?.displayName || user?.email || 'User',
@@ -55,26 +56,21 @@ function DashboardContent() {
             >
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold">
-                    Welcome back, {userProfile?.firstName || userProfile?.displayName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'User'}! 👋
-                  </h1>
-                  {userProfile && userProfile.isEarlyUser === true && userProfile.signupNumber && (
-                    <UserTracker />
-                  )}
-                </div>
-                {userProfile && userProfile.isEarlyUser === true && userProfile.signupNumber && (
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    <p className="text-[var(--text-secondary)] text-base sm:text-lg">
-                      Founder: {String(userProfile.signupNumber).padStart(3, '0')}/200
-                    </p>
+                  <div className="flex-1">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-3">
+                      Welcome back, {userProfile?.firstName || userProfile?.displayName?.split(' ')[0] || user?.displayName?.split(' ')[0] || 'User'}! 👋
+                    </h1>
+                    <div>
+                      <UserTracker />
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             </motion.div>
 
             {/* Congratulations Message for First Login */}
             <AnimatePresence>
-              {showCongratulations && userProfile?.isEarlyUser && userProfile?.signupNumber && (
+              {showCongratulations && userProfile?.signupNumber && (
                 <motion.div
                   initial={{ opacity: 0, y: -20, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -89,7 +85,7 @@ function DashboardContent() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg sm:text-xl md:text-2xl font-extrabold mb-1 text-[var(--lime)]">
-                          Congratulations! You&apos;re Founder #{String(userProfile.signupNumber).padStart(3, '0')}/200 🎉
+                          Congratulations! You&apos;re Founder #{userProfile?.signupNumber ? String(userProfile.signupNumber).padStart(3, '0') : '001'}/200 🎉
                         </h3>
                         <p className="text-sm sm:text-base md:text-lg text-[var(--text-secondary)]">
                           Welcome to Prysm! Thank you for being one of our first 200 founders. You&apos;re helping us build the future of education.
@@ -109,13 +105,12 @@ function DashboardContent() {
             </AnimatePresence>
 
             {/* Thank You Message for Founders */}
-            {userProfile && userProfile.isEarlyUser === true && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="mb-8"
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mb-8"
+            >
                 <Card className="bg-gradient-to-r from-[var(--lime)]/10 via-[var(--lavender)]/10 to-[var(--lime)]/10 border-[var(--lime)]/30">
                   <div className="p-4 sm:p-6 md:p-8 text-center">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[var(--lime)]/20 to-[var(--lavender)]/20 flex items-center justify-center mx-auto mb-4 sm:mb-6">
@@ -182,8 +177,7 @@ function DashboardContent() {
                     </div>
                   </div>
                 </Card>
-              </motion.div>
-            )}
+            </motion.div>
 
             {/* Main Dashboard Cards */}
             {/* Email verification card removed from dashboard but logic remains in verify-email page */}
@@ -198,122 +192,140 @@ function DashboardContent() {
               <div className="flex items-center gap-4 mb-6">
                 <h2 className="text-2xl font-extrabold text-[var(--text-primary)]">Tools & Features</h2>
               </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {/* Exam Hub */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-file-alt text-blue-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
+                      <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg whitespace-nowrap">
+                        Coming Soon
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3 sm:mb-4">
+                        <i className="fa-solid fa-file-alt text-blue-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Exam Hub</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Exam Hub</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         Access past exam papers and practice tests
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
-                      Coming Soon
-                    </span>
-                  </div>
                 </div>
 
                 {/* Smart Notes */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-sticky-note text-purple-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
+                      <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg whitespace-nowrap">
+                        Coming Soon
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3 sm:mb-4">
+                        <i className="fa-solid fa-sticky-note text-purple-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Smart Notes</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Smart Notes</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         AI-powered note-taking and organization
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
-                      Coming Soon
-                    </span>
-                  </div>
                 </div>
 
                 {/* Timetable */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-green-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-calendar-alt text-green-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-green-500/20 flex items-center justify-center mb-3 sm:mb-4">
+                        <i className="fa-solid fa-calendar-alt text-green-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Timetable</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Timetable</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         Manage your class schedule and deadlines
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
                       Coming Soon
                     </span>
                   </div>
                 </div>
 
                 {/* Paper Summarizer */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-wand-magic-sparkles text-yellow-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-3 sm:mb-4">
+                        <i className="fa-solid fa-wand-magic-sparkles text-yellow-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Paper Summarizer</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Paper Summarizer</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         AI-powered breakdowns of complex exam papers
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
                       Coming Soon
                     </span>
                   </div>
                 </div>
 
                 {/* Voice-to-Notes */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-pink-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-microphone text-pink-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[140px] sm:min-h-[160px] md:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-pink-500/20 flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
+                        <i className="fa-solid fa-microphone text-pink-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Voice-to-Notes</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Voice-to-Notes</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         Convert your voice recordings into notes
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
                       Coming Soon
                     </span>
                   </div>
                 </div>
 
                 {/* Grade Predictor */}
-                <div className="relative">
-                  <Card className="h-full opacity-60 blur-[2px] pointer-events-none">
-                    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[200px]">
-                      <div className="w-16 h-16 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4">
-                        <i className="fa-solid fa-chart-line text-indigo-400 text-2xl"></i>
+                <div 
+                  className="relative cursor-pointer group"
+                  onClick={() => router.push('/tools')}
+                >
+                  <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
+                    <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[140px] sm:min-h-[160px] md:min-h-[200px]">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
+                        <i className="fa-solid fa-chart-line text-indigo-400 text-lg sm:text-xl md:text-2xl"></i>
                       </div>
-                      <h3 className="text-xl font-extrabold mb-2">Grade Predictor</h3>
-                      <p className="text-[var(--text-secondary)] text-sm">
+                      <h3 className="text-base sm:text-lg md:text-xl font-extrabold mb-1 sm:mb-2">Grade Predictor</h3>
+                      <p className="text-[var(--text-secondary)] text-xs sm:text-sm">
                         Predict your grades based on past performance
                       </p>
                     </div>
                   </Card>
-                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 cursor-not-allowed">
-                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
                       Coming Soon
                     </span>
                   </div>

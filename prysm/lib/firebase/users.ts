@@ -53,13 +53,14 @@ export async function checkAndMarkEarlyUser(
         return { isEarly: true, signupNumber: existingIndex + 1 };
       }
 
-      // Check if we're still under the limit
-      const isEarly = currentCount < EARLY_USER_LIMIT;
+      // Check if we're still under the limit (use earlyUserIds length, not total count)
+      const currentEarlyUsersCount = earlyUserIds.length;
+      const isEarly = currentEarlyUsersCount < EARLY_USER_LIMIT;
       let signupNumber: number | null = null;
 
       if (isEarly) {
-        // Calculate signup number (current count + 1)
-        signupNumber = currentCount + 1;
+        // Calculate signup number (current early users count + 1)
+        signupNumber = currentEarlyUsersCount + 1;
 
         // Add user to early users list
         transaction.update(earlyUsersRef, {
@@ -163,7 +164,7 @@ export async function createUserProfile(
         push: false,
       },
       isEarlyUser,
-      signupNumber: signupNumber || undefined,
+      ...(signupNumber !== null && signupNumber !== undefined ? { signupNumber } : {}),
       privacyPolicyAccepted,
       status: "active",
       createdAt: serverTimestamp(),
@@ -257,9 +258,32 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
           // Update profile with signupNumber
           await updateDoc(userRef, {
             signupNumber,
+            isEarlyUser: true, // Ensure isEarlyUser is true
             updatedAt: serverTimestamp(),
           });
           profile.signupNumber = signupNumber;
+          profile.isEarlyUser = true;
+        }
+      }
+      
+      // Ensure isEarlyUser is true if signupNumber exists and is <= 200
+      if (profile.signupNumber !== null && profile.signupNumber !== undefined && profile.signupNumber <= 200) {
+        if (!profile.isEarlyUser) {
+          // Update isEarlyUser to true if it's false but user has a valid signupNumber
+          await updateDoc(userRef, {
+            isEarlyUser: true,
+            updatedAt: serverTimestamp(),
+          });
+          profile.isEarlyUser = true;
+        }
+      } else if (profile.signupNumber !== null && profile.signupNumber !== undefined && profile.signupNumber > 200) {
+        // If signupNumber > 200, user should not be an early user
+        if (profile.isEarlyUser) {
+          await updateDoc(userRef, {
+            isEarlyUser: false,
+            updatedAt: serverTimestamp(),
+          });
+          profile.isEarlyUser = false;
         }
       }
       

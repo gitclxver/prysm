@@ -130,9 +130,9 @@ export default function HomePage() {
       {/* Hero Section */}
       <header
         id="top"
-        className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-20 xl:py-32 relative overflow-x-hidden"
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 lg:py-20 xl:py-32 relative overflow-x-hidden"
       >
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20 hidden lg:block max-w-full">
+        <div className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-20 hidden lg:block max-w-full">
           <Badge variant="purple">
             <i className="fa-solid fa-sparkles mr-2"></i>
             Launching February 2026
@@ -142,14 +142,14 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-          className="text-center mb-6 sm:mb-8 lg:hidden"
+          className="text-center mb-4 sm:mb-6 lg:hidden"
         >
-          <Badge variant="purple" className="mb-4 sm:mb-6">
+          <Badge variant="purple" className="mb-3 sm:mb-4">
             <i className="fa-solid fa-sparkles mr-2"></i>
             Launching February 2026
           </Badge>
         </motion.div>
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 xl:gap-16 items-center relative justify-items-center lg:justify-items-stretch">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 items-center relative justify-items-center lg:justify-items-stretch">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -161,12 +161,12 @@ export default function HomePage() {
               <br />
               <span className="text-[var(--lime)]">Escape the Prysm.</span>
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-secondary)] mb-4 sm:mb-6 lg:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg lg:text-xl text-[var(--text-secondary)] mb-4 sm:mb-5 lg:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               The education assistant that centralizes your notes, exam papers,
               and schedule into one intelligent ecosystem. Harnessing the power
               of AI to build a brighter future for SADC students.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 lg:mb-12 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-5 sm:mb-6 lg:mb-12 justify-center lg:justify-start">
               {user ? (
                 <Link href="/dashboard">
                   <Button
@@ -215,11 +215,11 @@ export default function HomePage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative mt-8 lg:mt-0 w-full max-w-2xl lg:max-w-none"
+            className="relative mt-6 sm:mt-8 lg:mt-0 w-full max-w-2xl lg:max-w-none"
           >
             <div className="relative">
-              <div className="absolute -inset-4 sm:-inset-6 border-2 border-[var(--lime)]/20 rounded-2xl pointer-events-none"></div>
-              <Card className="relative p-4 sm:p-5 lg:p-6">
+              <div className="absolute -inset-3 sm:-inset-4 md:-inset-6 border-2 border-[var(--lime)]/20 rounded-2xl pointer-events-none"></div>
+              <Card className="relative p-3 sm:p-4 md:p-5 lg:p-6">
               <div className="bg-[var(--prysm-bg)] rounded-2xl p-5 sm:p-7 lg:p-10 border border-[var(--border-color)]">
                 <div className="flex items-center justify-between mb-5 sm:mb-6 gap-2">
                   <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
@@ -315,7 +315,7 @@ export default function HomePage() {
               Launching February 2026
             </Badge>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 sm:mb-6">
             Why{" "}
             <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">
               Prysm?
@@ -424,7 +424,7 @@ export default function HomePage() {
       {/* Smart Note Taking Section */}
       <section
         id="tools"
-        className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 grid lg:grid-cols-2 gap-16 items-center overflow-x-hidden"
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 grid lg:grid-cols-2 gap-8 sm:gap-12 md:gap-14 lg:gap-16 items-center overflow-x-hidden"
       >
         <div className="relative order-2 lg:order-1 overflow-hidden lg:overflow-visible hidden lg:block">
           <div
@@ -540,7 +540,7 @@ export default function HomePage() {
       </section>
 
       {/* Tools Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-x-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -551,7 +551,7 @@ export default function HomePage() {
           <div className="flex justify-center mb-6">
             <Badge variant="purple">Phase 1 Features</Badge>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 sm:mb-6">
             Everything You Need to{" "}
             <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">
               Succeed
@@ -667,7 +667,7 @@ export default function HomePage() {
       {/* Parents Section */}
       <section
         id="parents"
-        className="bg-[var(--prysm-bg)] py-16 sm:py-24 overflow-x-hidden"
+        className="bg-[var(--prysm-bg)] py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-center">
           <div className="order-2 lg:order-1 relative">
@@ -812,19 +812,19 @@ export default function HomePage() {
 
           <AnimatedCard
             delay={0.2}
-            className="academy-card border-l-4 border-l-purple-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]"
+            className="academy-card border-l-4 border-l-purple-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)] relative"
           >
-            <div className="w-14 h-14 bg-purple-400/10 rounded-xl flex items-center justify-center text-purple-400 mb-6">
-              <i className="fa-solid fa-book-open text-2xl feature-icon"></i>
-            </div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-[var(--text-primary)]">
-                Prysm Print
-              </h3>
-              <Badge variant="purple" className="text-xs">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <Badge variant="purple" className="text-[10px] px-2 py-0.5 whitespace-nowrap">
                 Coming Soon
               </Badge>
             </div>
+            <div className="w-14 h-14 bg-purple-400/10 rounded-xl flex items-center justify-center text-purple-400 mb-6">
+              <i className="fa-solid fa-book-open text-2xl feature-icon"></i>
+            </div>
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">
+              Prysm Print
+            </h3>
             <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
               Transform your digital notes and AI-generated summaries into
               premium physical study guides. Get professionally printed
@@ -841,19 +841,19 @@ export default function HomePage() {
 
           <AnimatedCard
             delay={0.3}
-            className="academy-card border-l-4 border-l-blue-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)]"
+            className="academy-card border-l-4 border-l-blue-400 border-t border-r border-b border-[var(--border-color)] p-8 rounded-2xl bg-[var(--prysm-card)] relative"
           >
-            <div className="w-14 h-14 bg-blue-400/10 rounded-xl flex items-center justify-center text-blue-400 mb-6">
-              <i className="fa-solid fa-paper-plane text-2xl feature-icon"></i>
-            </div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-[var(--text-primary)]">
-                Uni-Link
-              </h3>
-              <Badge variant="purple" className="text-xs">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <Badge variant="purple" className="text-[10px] px-2 py-0.5 whitespace-nowrap">
                 Future Phase
               </Badge>
             </div>
+            <div className="w-14 h-14 bg-blue-400/10 rounded-xl flex items-center justify-center text-blue-400 mb-6">
+              <i className="fa-solid fa-paper-plane text-2xl feature-icon"></i>
+            </div>
+            <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)]">
+              Uni-Link
+            </h3>
             <p className="text-sm text-[var(--text-secondary)] mb-6 leading-relaxed">
               Centralized university applications across SADC and beyond. We
               match your results to degree requirements and streamline your
@@ -871,7 +871,7 @@ export default function HomePage() {
       </section>
 
       {/* SADC Specialized Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-x-hidden">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden">
         <Card className="academy-card p-8 sm:p-12 rounded-[3rem] bg-gradient-to-br from-[var(--prysm-card)] to-[var(--prysm-bg)] overflow-hidden relative">
           <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 opacity-5 hidden lg:block pointer-events-none overflow-hidden max-w-full max-h-full">
             <i className="fa-solid fa-earth-africa text-[400px] lg:text-[400px] xl:text-[500px]"></i>
@@ -948,7 +948,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-x-hidden">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -959,7 +959,7 @@ export default function HomePage() {
           <div className="flex justify-center mb-6">
             <Badge variant="purple">Got Questions?</Badge>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 sm:mb-6">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">
               Questions
@@ -1029,40 +1029,40 @@ export default function HomePage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 overflow-x-hidden">
-        <Card className="p-8 sm:p-12 lg:p-16 rounded-3xl text-center relative overflow-hidden border-2 border-[var(--lime)]/20">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden">
+        <Card className="p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 rounded-3xl text-center relative overflow-hidden border-2 border-[var(--lime)]/20">
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--lime)]/5 to-transparent opacity-50"></div>
           <div className="relative z-10">
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4 sm:mb-6">
               <Badge variant="purple">Launching February 2026</Badge>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6">
               Ready to{" "}
               <span className="bg-gradient-to-r from-[var(--lime)] to-[var(--lavender)] bg-clip-text text-transparent">
                 Save Your Semester?
               </span>
             </h2>
-            <p className="text-base sm:text-lg text-[var(--text-secondary)] mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-[var(--text-secondary)] mb-6 sm:mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
               Join thousands of SADC students who are already on the waitlist.
               Be the first to experience the future of education. Sign up now to
               get early access.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link
-                href="/login"
-                className="bg-[var(--lime)] text-[var(--prysm-bg)] px-10 py-4 rounded-xl font-bold text-lg inline-block text-center hover:shadow-[0_0_40px_var(--shadow-lime)] hover:scale-105 transition-all duration-300 relative overflow-hidden"
-              >
-                <span className="relative z-10">Sign Up Now</span>
-              </Link>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2">
               <a
                 href="https://forms.gle/aSoACEDfygW3aap2A"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-10 py-4 rounded-xl font-bold text-lg border-2 border-[var(--border-color)] hover:border-[var(--lime)]/50 hover:bg-[var(--bg-overlay)] transition-all duration-300 inline-flex items-center justify-center"
+                className="bg-[var(--lime)] text-[var(--prysm-bg)] px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg inline-block text-center w-full sm:w-auto hover:shadow-[0_0_40px_var(--shadow-lime)] hover:scale-105 transition-all duration-300 relative overflow-hidden"
               >
-                Take the Survey
-                <i className="fa-solid fa-arrow-up-right ml-2 text-[var(--lime)]"></i>
+                <span className="relative z-10">Join Waitlist</span>
               </a>
+              <Link
+                href="/login"
+                className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg border-2 border-[var(--border-color)] hover:border-[var(--lime)]/50 hover:bg-[var(--bg-overlay)] transition-all duration-300 inline-flex items-center justify-center w-full sm:w-auto"
+              >
+                Login
+                <i className="fa-solid fa-arrow-right ml-2 text-[var(--lime)]"></i>
+              </Link>
             </div>
             <p className="text-sm text-[var(--text-tertiary)] mt-8">
               <i className="fa-solid fa-shield-check text-[var(--lime)] mr-2"></i>

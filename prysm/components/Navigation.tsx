@@ -15,7 +15,7 @@ export function Navigation() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { user, userProfile, signOut } = useAuth();
+  const { user, userProfile, signOut, loading } = useAuth();
   const displayName = userProfile?.displayName || user?.displayName || user?.email || "User";
   const displayText = userProfile?.username || displayName;
   const avatarUrl = getUserAvatarUrl(
@@ -67,8 +67,16 @@ export function Navigation() {
               height="32"
               loading="eager"
               fetchPriority="high"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 400 }}
+              animate={loading ? {
+                scale: [1, 1.1, 1],
+                opacity: [1, 0.7, 1],
+              } : {}}
+              transition={loading ? {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              } : { type: "spring", stiffness: 400 }}
+              whileHover={!loading ? { scale: 1.1, rotate: 5 } : {}}
               style={{ willChange: "transform" }}
               onError={(e) => {
                 e.currentTarget.style.display = "none";

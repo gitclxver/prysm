@@ -94,7 +94,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (profileTheme === lastProfileThemeRef.current) {
       return;
     }
-    
+
     // Update ref to track current profile theme
     lastProfileThemeRef.current = profileTheme || null;
     
@@ -103,7 +103,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       // Use a function updater to get current themePreference without adding it to deps
       setThemePreferenceState((current) => {
         if (profileTheme && profileTheme !== current) {
-          lastSyncedThemeRef.current = profileTheme;
+      lastSyncedThemeRef.current = profileTheme;
           return profileTheme;
         }
         lastSyncedThemeRef.current = current;
@@ -143,7 +143,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       if (userProfile.theme !== themePreference) {
         isSyncingToProfileRef.current = true;
         const themeToSync = themePreference;
-        
+
         updateUserProfile(user.uid, { theme: themeToSync })
           .then(() => {
             // Update lastSyncedTheme BEFORE refreshing to prevent sync-from from triggering

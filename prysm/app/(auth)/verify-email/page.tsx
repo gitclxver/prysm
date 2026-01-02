@@ -8,11 +8,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { auth } from "@/lib/firebase/config";
+import { sanitizeError } from "@/lib/utils/errorHandler";
 
 function VerifyEmailContent() {
   const { user, sendVerificationEmail, loading } = useAuth();
   const [emailSent, setEmailSent] = useState(false);
   const [resending, setResending] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -53,13 +55,18 @@ function VerifyEmailContent() {
   const handleResendEmail = async () => {
     try {
       setResending(true);
+      setError("");
       await sendVerificationEmail();
       setEmailSent(true);
       setTimeout(() => setEmailSent(false), 5000);
-    } catch (error) {
-      console.error("Error sending verification email:", error);
-      // Show error to user
-      alert("Failed to send verification email. Please try again.");
+    } catch (err) {
+      console.error("Error sending verification email:", err);
+      const friendlyError = sanitizeError(err);
+      if (friendlyError) {
+        setError(friendlyError);
+      } else {
+        setError("Failed to send verification email. Please try again.");
+      }
     } finally {
       setResending(false);
     }
@@ -149,6 +156,12 @@ function VerifyEmailContent() {
           <p className="text-[var(--lime)] font-semibold mt-1">{user.email}</p>
         </div>
 
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+
         <div className="bg-[var(--bg-overlay)] rounded-lg p-4 mb-6 text-left">
           <p className="text-sm text-[var(--text-secondary)] mb-2">
             <strong className="text-[var(--text-primary)]">
@@ -162,7 +175,7 @@ function VerifyEmailContent() {
           </ol>
         </div>
 
-        {emailSent && (
+        {emailSent && !error && (
           <div className="mb-4 p-3 bg-[var(--lime)]/10 border border-[var(--lime)]/20 rounded-lg text-[var(--lime)] text-sm">
             Verification email sent! Check your inbox.
           </div>

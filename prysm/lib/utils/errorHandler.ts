@@ -123,12 +123,21 @@ export function sanitizeError(error: unknown): string {
     }
     
     // For connection/network errors, show user-friendly message
-    if (message.includes('network') || message.includes('fetch') || message.includes('connection')) {
-      return 'Unable to connect. Please check your internet connection and try again.';
+    if (
+      message.includes('network') || 
+      message.includes('fetch') || 
+      message.includes('connection') ||
+      message.includes('offline') ||
+      message.includes('failed to fetch') ||
+      message.includes('networkerror') ||
+      message.includes('network request failed') ||
+      message.includes('internet')
+    ) {
+      return 'Device is offline. Please check your internet connection and try again.';
     }
     
     // For unknown errors, return generic message
-    return 'An error occurred. Please try again.';
+    return 'Something went wrong. Please try again, or contact support if the problem persists.';
   }
 
   // Handle Firebase error objects
@@ -158,7 +167,7 @@ export function sanitizeError(error: unknown): string {
   }
 
   // Default fallback
-  return 'An error occurred. Please try again.';
+  return 'Something went wrong. Please try again, or contact support if the problem persists.';
 }
 
 /**
