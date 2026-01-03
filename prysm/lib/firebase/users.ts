@@ -63,9 +63,18 @@ export async function checkAndMarkEarlyUser(
         signupNumber = currentEarlyUsersCount + 1;
 
         // Add user to early users list
-        transaction.update(earlyUsersRef, {
-          userIds: arrayUnion(uid),
-        });
+        // Handle both cases: document exists or doesn't exist
+        if (earlyUsersSnap.exists()) {
+          // Document exists, use update with arrayUnion
+          transaction.update(earlyUsersRef, {
+            userIds: arrayUnion(uid),
+          });
+        } else {
+          // Document doesn't exist, create it with the first user
+          transaction.set(earlyUsersRef, {
+            userIds: [uid],
+          });
+        }
       }
 
       // Increment user count
@@ -84,6 +93,13 @@ export async function checkAndMarkEarlyUser(
     return result;
   } catch (error) {
     console.error("Error checking early user status:", error);
+    console.error("Error details:", {
+      uid,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorStack: error instanceof Error ? error.stack : undefined,
+    });
+    // Don't fail silently - re-throw so we can see what's wrong
+    // But for now, return null to prevent blocking signup
     return { isEarly: false, signupNumber: null };
   }
 }

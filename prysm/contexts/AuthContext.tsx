@@ -293,20 +293,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
 
       // Check if user is early user and get signup number
-      const { isEarly, signupNumber } = await checkAndMarkEarlyUser(
-        userCredential.user.uid
+      const { isEarly, signupNumber } = await withFirebaseDelay(
+        checkAndMarkEarlyUser(userCredential.user.uid),
+        500
       );
 
       // Create user profile with privacy policy acceptance
-      await createUserProfile(
-        userCredential.user.uid,
-        userCredential.user.email || "",
-        userCredential.user.displayName || "User",
-        photoURL,
-        isEarly,
-        signupNumber,
-        undefined, // username
-        privacyPolicyAccepted
+      await withFirebaseDelay(
+        createUserProfile(
+          userCredential.user.uid,
+          userCredential.user.email || "",
+          userCredential.user.displayName || "User",
+          photoURL,
+          isEarly,
+          signupNumber,
+          undefined, // username
+          privacyPolicyAccepted
+        ),
+        600
       );
     }
 

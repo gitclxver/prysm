@@ -215,6 +215,9 @@ export function Navigation() {
           ) : (
             <>
               <Link href="/login" className="hidden sm:block">
+                <Button variant="secondary">Login</Button>
+              </Link>
+              <Link href="/login" className="hidden sm:block">
                 <Button variant="primary">Join Waitlist</Button>
               </Link>
               <button

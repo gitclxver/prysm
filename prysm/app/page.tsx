@@ -149,14 +149,14 @@ export default function HomePage() {
             Launching February 2026
           </Badge>
         </motion.div>
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 items-center relative justify-items-center lg:justify-items-stretch">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 items-center relative justify-items-center lg:justify-items-stretch min-w-0">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="text-center lg:text-left relative z-10 w-full max-w-2xl lg:max-w-none"
+            className="text-center lg:text-left relative z-10 w-full max-w-2xl lg:max-w-none min-w-0"
           >
-            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-3 sm:mb-4 lg:mb-6 leading-[1.1] break-words">
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-3 sm:mb-4 lg:mb-6 leading-[1.1] break-words overflow-wrap-anywhere">
               Save Your Semester.
               <br />
               <span className="text-[var(--lime)]">Escape the Prysm.</span>
@@ -215,7 +215,7 @@ export default function HomePage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative mt-6 sm:mt-8 lg:mt-0 w-full max-w-2xl lg:max-w-none"
+            className="relative mt-6 sm:mt-8 lg:mt-0 w-full max-w-2xl lg:max-w-none min-w-0"
           >
             <div className="relative">
               <div className="absolute -inset-3 sm:-inset-4 md:-inset-6 border-2 border-[var(--lime)]/20 rounded-2xl pointer-events-none"></div>
@@ -1056,13 +1056,15 @@ export default function HomePage() {
               >
                 <span className="relative z-10">Join Waitlist</span>
               </a>
-              <Link
-                href="/login"
+              <a
+                href="https://forms.gle/aSoACEDfygW3aap2A"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg border-2 border-[var(--border-color)] hover:border-[var(--lime)]/50 hover:bg-[var(--bg-overlay)] transition-all duration-300 inline-flex items-center justify-center w-full sm:w-auto"
               >
-                Login
+                Feedback
                 <i className="fa-solid fa-arrow-right ml-2 text-[var(--lime)]"></i>
-              </Link>
+              </a>
             </div>
             <p className="text-sm text-[var(--text-tertiary)] mt-8">
               <i className="fa-solid fa-shield-check text-[var(--lime)] mr-2"></i>

@@ -81,7 +81,15 @@ function DashboardContent() {
                   <Card className="bg-gradient-to-r from-[var(--lime)]/20 via-[var(--lime)]/10 to-[var(--lavender)]/10 border-2 border-[var(--lime)]/40 shadow-lg shadow-[var(--lime)]/20">
                     <div className="flex items-start sm:items-center gap-3 sm:gap-4 p-4 sm:p-6">
                       <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-[var(--lime)]/30 flex items-center justify-center flex-shrink-0">
-                        <i className="fa-solid fa-crown text-[var(--lime)] text-xl sm:text-3xl"></i>
+                        <img
+                          src="/badge.svg"
+                          alt="Founder Badge"
+                          className="w-8 h-8 sm:w-12 sm:h-12"
+                          style={{ filter: 'drop-shadow(0 0 4px rgba(212, 255, 128, 0.3))' }}
+                          onError={(e) => {
+                            e.currentTarget.src = '/badge.png';
+                          }}
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg sm:text-xl md:text-2xl font-extrabold mb-1 text-[var(--lime)]">
@@ -113,8 +121,16 @@ function DashboardContent() {
             >
                 <Card className="bg-gradient-to-r from-[var(--lime)]/10 via-[var(--lavender)]/10 to-[var(--lime)]/10 border-[var(--lime)]/30">
                   <div className="p-4 sm:p-6 md:p-8 text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[var(--lime)]/20 to-[var(--lavender)]/20 flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                      <i className="fa-solid fa-heart text-[var(--lime)] text-2xl sm:text-3xl"></i>
+                    <div className="flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                      <img
+                        src="/badge.svg"
+                        alt="Founder Badge"
+                        className="w-16 h-16 sm:w-20 sm:h-20"
+                        style={{ filter: 'drop-shadow(0 0 4px rgba(212, 255, 128, 0.3))' }}
+                        onError={(e) => {
+                          e.currentTarget.src = '/badge.png';
+                        }}
+                      />
                     </div>
                     
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-3 sm:mb-4 text-[var(--text-primary)]">
@@ -199,11 +215,6 @@ function DashboardContent() {
                   onClick={() => router.push('/tools')}
                 >
                   <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
-                      <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg whitespace-nowrap">
-                        Coming Soon
-                      </span>
-                    </div>
                     <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
                       <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3 sm:mb-4">
                         <i className="fa-solid fa-file-alt text-blue-400 text-lg sm:text-xl md:text-2xl"></i>
@@ -214,6 +225,11 @@ function DashboardContent() {
                       </p>
                     </div>
                   </Card>
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                      Coming Soon
+                    </span>
+                  </div>
                 </div>
 
                 {/* Smart Notes */}
@@ -222,11 +238,6 @@ function DashboardContent() {
                   onClick={() => router.push('/tools')}
                 >
                   <Card className="h-full opacity-80 blur-[0.5px] transition-all duration-300 group-hover:opacity-90">
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
-                      <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg whitespace-nowrap">
-                        Coming Soon
-                      </span>
-                    </div>
                     <div className="flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center min-h-[160px] sm:min-h-[200px]">
                       <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3 sm:mb-4">
                         <i className="fa-solid fa-sticky-note text-purple-400 text-lg sm:text-xl md:text-2xl"></i>
@@ -237,6 +248,11 @@ function DashboardContent() {
                       </p>
                     </div>
                   </Card>
+                  <div className="absolute inset-0 bg-[var(--prysm-bg)]/40 backdrop-blur-sm rounded-xl flex items-center justify-center z-10 group-hover:bg-[var(--prysm-bg)]/30 transition-colors">
+                    <span className="bg-[var(--prysm-card)] text-[var(--lime)] text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase tracking-widest border border-[var(--lime)]/30 shadow-lg">
+                      Coming Soon
+                    </span>
+                  </div>
                 </div>
 
                 {/* Timetable */}

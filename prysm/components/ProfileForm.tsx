@@ -304,7 +304,14 @@ export function ProfileForm() {
                       id="editFirstName"
                       type="text"
                       value={editedFirstName}
-                      onChange={(e) => setEditedFirstName(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length > 0) {
+                          setEditedFirstName(value.charAt(0).toUpperCase() + value.slice(1));
+                        } else {
+                          setEditedFirstName(value);
+                        }
+                      }}
                       className="w-full px-3 py-2 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] focus:ring-2 focus:ring-[var(--lime)]/20 transition-all text-sm"
                       placeholder="First name"
                       maxLength={50}
@@ -318,7 +325,14 @@ export function ProfileForm() {
                       id="editLastName"
                       type="text"
                       value={editedLastName}
-                      onChange={(e) => setEditedLastName(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length > 0) {
+                          setEditedLastName(value.charAt(0).toUpperCase() + value.slice(1));
+                        } else {
+                          setEditedLastName(value);
+                        }
+                      }}
                       className="w-full px-3 py-2 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] focus:ring-2 focus:ring-[var(--lime)]/20 transition-all text-sm"
                       placeholder="Last name"
                       maxLength={50}

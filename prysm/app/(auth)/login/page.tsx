@@ -324,7 +324,14 @@ export default function LoginPage() {
                     id="firstName"
                     type="text"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length > 0) {
+                        setFirstName(value.charAt(0).toUpperCase() + value.slice(1));
+                      } else {
+                        setFirstName(value);
+                      }
+                    }}
                     className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
                     placeholder="First Name"
                     required
@@ -342,7 +349,14 @@ export default function LoginPage() {
                     id="lastName"
                   type="text"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length > 0) {
+                        setLastName(value.charAt(0).toUpperCase() + value.slice(1));
+                      } else {
+                        setLastName(value);
+                      }
+                    }}
                   className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
                     placeholder="Last Name"
                   required
