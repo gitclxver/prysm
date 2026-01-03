@@ -13,6 +13,7 @@ import { getUserAvatarUrl } from "@/lib/avatar";
 export function Navigation() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { user, userProfile, signOut, loading } = useAuth();
@@ -23,6 +24,17 @@ export function Navigation() {
     userProfile?.photoURL || user?.photoURL || null,
     32
   );
+
+  // Detect scroll to make header sticky
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      setIsScrolled(scrollY > 50); // Become sticky after scrolling 50px
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -53,7 +65,7 @@ export function Navigation() {
 
   return (
     <nav
-      className="sticky top-0 z-50 bg-[var(--prysm-bg)]/95 backdrop-blur-xl border-b border-[var(--border-color)] px-4 sm:px-6 py-4 shadow-lg shadow-[var(--shadow-color)]"
+      className={`${isScrolled ? 'fixed' : 'relative'} top-0 left-0 right-0 z-50 bg-[var(--prysm-bg)]/95 backdrop-blur-xl border-b border-[var(--border-color)] px-4 sm:px-6 py-4 ${isScrolled ? 'shadow-lg shadow-[var(--shadow-color)]' : ''}`}
       style={{ isolation: "isolate" }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">

@@ -217,11 +217,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("auth_token", token);
       }
 
-      // Send verification email
-      await withFirebaseDelay(
-        sendEmailVerification(userCredential.user),
-        500
-      );
+      // Email verification disabled for now
+      // await withFirebaseDelay(
+      //   sendEmailVerification(userCredential.user),
+      //   500
+      // );
 
       // Refresh profile
       await withFirebaseDelay(refreshUserProfile(), 500);
