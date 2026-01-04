@@ -177,14 +177,12 @@ export default function HomePage() {
                   </Button>
                 </Link>
               ) : (
-                <a
-                  href="https://forms.gle/aSoACEDfygW3aap2A"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/login"
                   className="bg-[var(--lime)] text-[var(--prysm-bg)] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base inline-block text-center w-full sm:w-auto hover:shadow-[0_0_40px_var(--shadow-lime)] hover:scale-105 transition-all duration-300 relative overflow-hidden"
                 >
-                  <span className="relative z-10">Take the Survey</span>
-                </a>
+                  <span className="relative z-10">Join Waitlist</span>
+                </Link>
               )}
               <a
                 href="#features"
@@ -1048,14 +1046,12 @@ export default function HomePage() {
               get early access.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-2">
-              <a
-                href="https://forms.gle/aSoACEDfygW3aap2A"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/login"
                 className="bg-[var(--lime)] text-[var(--prysm-bg)] px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base md:text-lg inline-block text-center w-full sm:w-auto hover:shadow-[0_0_40px_var(--shadow-lime)] hover:scale-105 transition-all duration-300 relative overflow-hidden"
               >
                 <span className="relative z-10">Join Waitlist</span>
-              </a>
+              </Link>
               <a
                 href="https://forms.gle/aSoACEDfygW3aap2A"
                 target="_blank"

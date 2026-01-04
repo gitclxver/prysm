@@ -19,14 +19,14 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 hover:bg-[var(--bg-overlay-hover)] border border-[var(--border-color)] hover:border-[var(--border-hover)]"
+      className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500 ease-in-out hover:bg-[var(--bg-overlay-hover)] border border-[var(--border-color)] hover:border-[var(--border-hover)]"
       aria-label={`Switch to ${displayTheme === 'light' ? 'dark' : 'light'} mode`}
       suppressHydrationWarning
     >
       <motion.div
         initial={false}
         animate={{ rotate: displayTheme === 'light' ? 0 : 180 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
         className="text-[var(--text-primary)]"
         suppressHydrationWarning
       >

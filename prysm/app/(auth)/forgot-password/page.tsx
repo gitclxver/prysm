@@ -130,8 +130,7 @@ export default function ForgotPasswordPage() {
           </div>
           <h1 className="text-3xl font-extrabold mb-2">Reset Password</h1>
           <p className="text-[var(--text-secondary)]">
-            Enter your email address and we&apos;ll send you a link to reset
-            your password.
+            Password reset via email is currently unavailable.
           </p>
         </div>
 
@@ -140,6 +139,22 @@ export default function ForgotPasswordPage() {
             {error}
           </div>
         )}
+
+        <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+          <p className="text-sm text-[var(--text-secondary)] mb-2">
+            <strong className="text-[var(--text-primary)]">Password reset is currently unavailable.</strong>
+          </p>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Please contact{" "}
+            <a
+              href="mailto:support@prysmlearn.com"
+              className="text-[var(--lime)] hover:underline font-semibold"
+            >
+              support@prysmlearn.com
+            </a>{" "}
+            for assistance with resetting your password.
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -151,9 +166,9 @@ export default function ForgotPasswordPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors"
+              className="w-full px-4 py-3 bg-[var(--bg-overlay)] border border-[var(--border-color)] rounded-lg text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[var(--lime)] transition-colors opacity-50 cursor-not-allowed"
               placeholder="you@example.com"
-              required
+              disabled
             />
           </div>
 
@@ -161,9 +176,9 @@ export default function ForgotPasswordPage() {
             type="submit"
             variant="primary"
             className="w-full"
-            disabled={loading}
+            disabled={true}
           >
-            {loading ? "Sending..." : "Send Reset Link"}
+            Send Reset Link
           </Button>
         </form>
 

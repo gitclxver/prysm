@@ -68,12 +68,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-[70%] max-w-md bg-[var(--prysm-card)] border-l border-[var(--border-color)] z-[9999] lg:hidden overflow-y-auto shadow-2xl"
+            className="fixed right-0 top-0 h-full w-[70%] max-w-md bg-[var(--prysm-card)] border-l border-[var(--border-color)] z-[9999] lg:hidden shadow-2xl"
             role="complementary"
             aria-label="Mobile navigation"
             style={{ position: "fixed", zIndex: 9999 }}
           >
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[var(--border-color)]">
                 <Link
@@ -164,7 +164,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               </nav>
 
               {/* Footer Actions */}
-              <div className="p-4 sm:p-6 border-t border-[var(--border-color)] space-y-3 sm:space-y-4">
+              <div className="p-4 sm:p-6 border-t border-[var(--border-color)] space-y-3 sm:space-y-4 flex-shrink-0">
                 {user ? (
                   <>
                     <Link href="/dashboard" onClick={onClose}>
@@ -192,12 +192,20 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     </Button>
                   </>
                 ) : (
-                  <Link href="/login" onClick={onClose}>
-                    <Button variant="primary" className="w-full">
-                      <i className="fa-solid fa-star mr-2"></i>
-                      Join Waitlist
-                    </Button>
-                  </Link>
+                  <>
+                    <Link href="/login" onClick={onClose}>
+                      <Button variant="primary" className="w-full">
+                        <i className="fa-solid fa-star mr-2"></i>
+                        Join Waitlist
+                      </Button>
+                    </Link>
+                    <Link href="/login" onClick={onClose}>
+                      <Button variant="secondary" className="w-full">
+                        <i className="fa-solid fa-sign-in-alt mr-2"></i>
+                        Login
+                      </Button>
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
