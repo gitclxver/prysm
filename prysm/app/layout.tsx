@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -206,8 +207,24 @@ export default function RootLayout({
             })
           }}
         />
+        {/* Google Analytics */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-TN4X15J40Q');
+            `,
+          }}
+        />
       </head>
       <body className={`${geistMono.variable} antialiased`}>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-TN4X15J40Q"
+          strategy="afterInteractive"
+        />
         <AuthProvider>
           <ThemeProvider>
             <a 
